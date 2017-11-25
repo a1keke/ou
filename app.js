@@ -5,7 +5,7 @@ let ejs = require('ejs');
 let bodyParser = require('body-parser');
 let router = require('./controller');
 var app = express();
-
+//test
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
