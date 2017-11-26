@@ -10881,7 +10881,8 @@ module.exports = function (css) {
 	/*
  This regular expression is just a way to recursively match brackets within
  a string.
- 	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+ 
+  /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
     (  = Start a capturing group
       (?:  = Start a non-capturing group
           [^)(]  = Match anything that isn't a parentheses
@@ -10899,7 +10900,8 @@ module.exports = function (css) {
           *  = Match anything
        )  = Close capturing group
   \)  = Match a close parens
- 	 /gi  = Get all matches, not the first.  Be case insensitive.
+ 
+  /gi  = Get all matches, not the first.  Be case insensitive.
   */
 	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function (fullMatch, origUrl) {
 		// strip quotes (if they exist)

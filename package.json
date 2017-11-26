@@ -2,15 +2,16 @@
   "name": "learnyoureact",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "webpack": "webpack",
-    "program": "node program"
+    "program": "node program",
+    "build": "webpack --config webpack.build.config.js",
+    "test": "webpack --config webpack.test.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel": "^6.23.0",
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
     "css-loader": "^0.28.7",
@@ -18,8 +19,7 @@
     "express": "^4.16.2",
     "express-react-views": "^0.10.4",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "style-loader": "^0.19.0"
+    "react-dom": "^16.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -39,6 +39,8 @@
     "semantic-ui": "^2.2.13",
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
-    "whatwg-fetch": "^2.0.3"
+    "whatwg-fetch": "^2.0.3",
+    "style-loader": "^0.19.0",
+    "babel": "^6.23.0"
   }
 }
