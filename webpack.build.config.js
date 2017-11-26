@@ -91,6 +91,5 @@ module.exports = {
             path.resolve(__dirname, '/'),
             path.resolve(__dirname, '/semantic'),
         ]
-    },
-    watch: true
+    }
 }

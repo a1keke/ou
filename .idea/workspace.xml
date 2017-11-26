@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e50c346a-5d9a-4292-9dbb-dec927803103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/router.js" afterPath="$PROJECT_DIR$/controller/router.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/mongodb.js" afterPath="$PROJECT_DIR$/model/mongodb.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/diary/Diary.js" afterPath="$PROJECT_DIR$/src/diary/components/diary/Diary.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/diary/style.scss" afterPath="$PROJECT_DIR$/src/diary/components/diary/style.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/diaryList/DiaryList.js" afterPath="$PROJECT_DIR$/src/diary/components/diaryList/DiaryList.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/diaryList/style.scss" afterPath="$PROJECT_DIR$/src/diary/components/diaryList/style.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/diaryTextarea/DiaryTextarea.js" afterPath="$PROJECT_DIR$/src/diary/components/diaryTextarea/DiaryTextarea.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/diaryTextarea/style.scss" afterPath="$PROJECT_DIR$/src/diary/components/diaryTextarea/style.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/toast/Toast.js" afterPath="$PROJECT_DIR$/src/diary/components/toast/Toast.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/diary/components/toast/style.scss" afterPath="$PROJECT_DIR$/src/diary/components/toast/style.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/diary.js" afterPath="$PROJECT_DIR$/static/diary.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webpack.build.config.js" afterPath="$PROJECT_DIR$/webpack.build.config.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -66,11 +55,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.scss" pinned="false" current-in-tab="true">
+      <file leaf-file-name="style.scss" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/diary/components/diary/style.scss">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="399">
               <caret line="19" column="1" lean-forward="true" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webpack.build.config.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/webpack.build.config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="93" column="5" lean-forward="true" selection-start-line="93" selection-start-column="5" selection-end-line="93" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -153,7 +152,6 @@
         <option value="$PROJECT_DIR$/src/diary/index.js" />
         <option value="$PROJECT_DIR$/src/diary/components/diary.html" />
         <option value="$PROJECT_DIR$/webpack.config.js" />
-        <option value="$PROJECT_DIR$/webpack.build.config.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/app.js" />
@@ -172,6 +170,7 @@
         <option value="$PROJECT_DIR$/src/diary/components/diaryList/DiaryList.js" />
         <option value="$PROJECT_DIR$/src/diary/components/diary/Diary.js" />
         <option value="$PROJECT_DIR$/src/diary/components/diary/style.scss" />
+        <option value="$PROJECT_DIR$/webpack.build.config.js" />
       </list>
     </option>
   </component>
@@ -393,12 +392,12 @@
       <workItem from="1511331378514" duration="40040000" />
       <workItem from="1511587681965" duration="8556000" />
       <workItem from="1511611334089" duration="681000" />
-      <workItem from="1511676507780" duration="14187000" />
+      <workItem from="1511676507780" duration="14550000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="206912000" />
+    <option name="totallyTimeSpent" value="207275000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
@@ -656,14 +655,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webpack.build.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="85" column="45" lean-forward="true" selection-start-line="85" selection-start-column="45" selection-end-line="85" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/webpack.test.config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -774,6 +765,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
           <caret line="19" column="1" lean-forward="true" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webpack.build.config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="93" column="5" lean-forward="true" selection-start-line="93" selection-start-column="5" selection-end-line="93" selection-end-column="5" />
           <folding />
         </state>
       </provider>
