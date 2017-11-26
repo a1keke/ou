@@ -7,14 +7,14 @@ import S from './style.scss';
 
 import 'whatwg-fetch';
 import 'promise-polyfill';
-
 export default class DiaryTextarea extends Component{
     constructor(props){
         super(props);
         this.state = {
             title:'',
             content:'',
-            toastFlag:false
+            toastFlag:false,
+            toastMsg:''
         }
         this.changeTitle = this.changeTitle.bind(this);
         this.changeContent = this.changeContent.bind(this);
@@ -26,17 +26,10 @@ export default class DiaryTextarea extends Component{
         this.noTab = this.noTab.bind(this);
     };
 
-    changeTitle(ev){
+    changeTitle(ev){this.setState({title:ev.target.value})};
 
-        this.setState({title:ev.target.value})
+    changeContent(ev){this.setState({content:ev.target.value})};
 
-    };
-
-    changeContent(ev){
-
-        this.setState({content:ev.target.value})
-
-    };
     tabEvent(ev){
         if(ev.keyCode===9){
             let _content = this.refs.content;
@@ -49,6 +42,7 @@ export default class DiaryTextarea extends Component{
             ev.preventDefault();
         }
     }
+
     saveDairy(){
 
         let {changeToast,fomartContent} = this;
@@ -56,15 +50,12 @@ export default class DiaryTextarea extends Component{
         let {title,content} = this.state;
 
         if(title==='' || content ===''){
-            changeToast();
+            changeToast('title or content cant empty');
             return false;
         }
 
         content = fomartContent(content);
 
-
-        console.log(title);
-        
         let init = {
             method:'POST',
             headers: {
@@ -73,11 +64,14 @@ export default class DiaryTextarea extends Component{
             body:JSON.stringify({title,content})
         }
 
-
         fetch('/diary/saveDiary',init).then(res=>{
-            console.log('saveDiary is success');
+            return res.json();
+        }).then(res=>{
+            let {code} = res;
+            code === 1? changeToast('save success,please refresh'):changeToast('save fail');
+
         }).catch(res=>{
-            console.log('saveDiary is fail');
+            changeToast('save fail');
         })
 
     }
@@ -86,6 +80,12 @@ export default class DiaryTextarea extends Component{
         let {hasTab,noTab} = this;
 
         let _content = content.split('\n');
+
+        let reg = new RegExp(' ','g');
+
+        _content = _content.filter((ele)=>{
+            return ele.replace(reg,'').length !== 0 ;
+        })
 
         let result = [];
 
@@ -156,23 +156,22 @@ export default class DiaryTextarea extends Component{
                 break;
         }
 
-        console.log(result);
-
         return result;
 
     }
 
-    hasTab(part){
-        return part.substr(0,4)==='    ';
-    }
-    noTab(part){
-        return part.substr(0,4)!=='    ';
-    }
+    hasTab(part){return part.substr(0,4)==='    ';}
 
-    changeToast(){
+    noTab(part){return part.substr(0,4)!=='    ';}
+
+    changeToast(msg){
+        let toastMsg = '';
+        if(msg){
+            toastMsg = msg;
+        }
         let {toastFlag} = this.state;
 
-        this.setState({toastFlag:!toastFlag});
+        this.setState({toastMsg,toastFlag:!toastFlag});
 
     }
 
@@ -180,14 +179,12 @@ export default class DiaryTextarea extends Component{
 
         let {changeTitle,changeContent,saveDairy,changeToast,tabEvent} = this;
 
-        let {toastFlag} = this.state;
+        let {toastMsg,toastFlag} = this.state;
 
         return (
             <form className={`ui reply form ${S.m}`} action="./dairy/saveDairy">
                 <div className={`ui labeled input ${S.mb}`}>
-                    <a className="ui label">
-                        标题
-                    </a>
+                    <a className="ui label">title</a>
                     <input type="text" placeholder="请输入标题" name="title" onChange={changeTitle} />
                 </div>
                 <div className="field">
@@ -199,7 +196,7 @@ export default class DiaryTextarea extends Component{
                     <i className="icon edit"></i>
                     save
                 </div>
-                <Toast {...{text:'标题和内容都不能为空！',flag:toastFlag,changeToast}}/>
+                <Toast {...{text:toastMsg,flag:toastFlag,changeToast}}/>
             </form>
         );
     }

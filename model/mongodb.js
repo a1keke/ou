@@ -104,10 +104,18 @@ exports.saveDiary = function (args,cb) {
 
             let diary = await db.collection('diary');
 
-            await diary.insert({index:index+1,time,week,title,content});
+            try{
+                await diary.insert({index:index+1,time,week,title,content});
 
-            await db.close();
-            await cb();
+                await db.close();
+
+                await cb({code:1});
+
+            }catch (e){
+                await cb({code:0})
+            }
+
+
 
         }
     )()

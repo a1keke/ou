@@ -15,7 +15,9 @@ export default class Toast extends Component{
                 className={flag?
                     'ui dimmer modals page transition visible active':
                     'ui dimmer modals page transition'}
-                onClick={changeToast}
+                onClick={()=>{
+                    changeToast();
+                }}
                 >
                 <div className={`ui small test modal transition visible active ${S.fix}`}>
                     <div className={`header ${S.bbn}`}>Warning</div>

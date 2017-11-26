@@ -10986,7 +10986,8 @@ var DiaryTextarea = function (_Component) {
         _this.state = {
             title: '',
             content: '',
-            toastFlag: false
+            toastFlag: false,
+            toastMsg: ''
         };
         _this.changeTitle = _this.changeTitle.bind(_this);
         _this.changeContent = _this.changeContent.bind(_this);
@@ -11002,13 +11003,11 @@ var DiaryTextarea = function (_Component) {
     _createClass(DiaryTextarea, [{
         key: 'changeTitle',
         value: function changeTitle(ev) {
-
             this.setState({ title: ev.target.value });
         }
     }, {
         key: 'changeContent',
         value: function changeContent(ev) {
-
             this.setState({ content: ev.target.value });
         }
     }, {
@@ -11036,13 +11035,11 @@ var DiaryTextarea = function (_Component) {
 
 
             if (title === '' || content === '') {
-                changeToast();
+                changeToast('title or content cant empty');
                 return false;
             }
 
             content = fomartContent(content);
-
-            console.log(title);
 
             var init = {
                 method: 'POST',
@@ -11053,9 +11050,13 @@ var DiaryTextarea = function (_Component) {
             };
 
             fetch('/diary/saveDiary', init).then(function (res) {
-                console.log('saveDiary is success');
+                return res.json();
+            }).then(function (res) {
+                var code = res.code;
+
+                code === 1 ? changeToast('save success,please refresh') : changeToast('save fail');
             }).catch(function (res) {
-                console.log('saveDiary is fail');
+                changeToast('save fail');
             });
         }
     }, {
@@ -11066,6 +11067,12 @@ var DiaryTextarea = function (_Component) {
 
 
             var _content = content.split('\n');
+
+            var reg = new RegExp(' ', 'g');
+
+            _content = _content.filter(function (ele) {
+                return ele.replace(reg, '').length !== 0;
+            });
 
             var result = [];
 
@@ -11139,8 +11146,6 @@ var DiaryTextarea = function (_Component) {
                     break;
             }
 
-            console.log(result);
-
             return result;
         }
     }, {
@@ -11155,11 +11160,15 @@ var DiaryTextarea = function (_Component) {
         }
     }, {
         key: 'changeToast',
-        value: function changeToast() {
+        value: function changeToast(msg) {
+            var toastMsg = '';
+            if (msg) {
+                toastMsg = msg;
+            }
             var toastFlag = this.state.toastFlag;
 
 
-            this.setState({ toastFlag: !toastFlag });
+            this.setState({ toastMsg: toastMsg, toastFlag: !toastFlag });
         }
     }, {
         key: 'render',
@@ -11169,7 +11178,9 @@ var DiaryTextarea = function (_Component) {
                 saveDairy = this.saveDairy,
                 changeToast = this.changeToast,
                 tabEvent = this.tabEvent;
-            var toastFlag = this.state.toastFlag;
+            var _state2 = this.state,
+                toastMsg = _state2.toastMsg,
+                toastFlag = _state2.toastFlag;
 
 
             return _react2.default.createElement(
@@ -11181,7 +11192,7 @@ var DiaryTextarea = function (_Component) {
                     _react2.default.createElement(
                         'a',
                         { className: 'ui label' },
-                        '\u6807\u9898'
+                        'title'
                     ),
                     _react2.default.createElement('input', { type: 'text', placeholder: '\u8BF7\u8F93\u5165\u6807\u9898', name: 'title', onChange: changeTitle })
                 ),
@@ -11198,7 +11209,7 @@ var DiaryTextarea = function (_Component) {
                     _react2.default.createElement('i', { className: 'icon edit' }),
                     'save'
                 ),
-                _react2.default.createElement(_Toast2.default, { text: '标题和内容都不能为空！', flag: toastFlag, changeToast: changeToast })
+                _react2.default.createElement(_Toast2.default, { text: toastMsg, flag: toastFlag, changeToast: changeToast })
             );
         }
     }]);
@@ -11259,7 +11270,9 @@ var Toast = function (_Component) {
                 'div',
                 {
                     className: flag ? 'ui dimmer modals page transition visible active' : 'ui dimmer modals page transition',
-                    onClick: changeToast
+                    onClick: function onClick() {
+                        changeToast();
+                    }
                 },
                 _react2.default.createElement(
                     'div',
@@ -11338,7 +11351,7 @@ exports = module.exports = __webpack_require__(5)(undefined);
 
 
 // module
-exports.push([module.i, "/*scss*/\n._6Wu0Y_hL2bZfmLhhFFm-z {\n  border-bottom: none !important; }\n\n._1mhpoxTgHlnG2dm6v0D4r- {\n  text-align: center; }\n\n._2CspKGDhSw_rxzOHX3Vqy7 {\n  margin: 0 !important;\n  -ms-transform: translate(-50%, -50%);\n  -webkit-transform: translate(-50%, -50%);\n  -o-transform: translate(-50%, -50%);\n  -moz-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%); }\n", ""]);
+exports.push([module.i, "/*scss*/\n._6Wu0Y_hL2bZfmLhhFFm-z {\n  border-bottom: none !important; }\n\n._1mhpoxTgHlnG2dm6v0D4r- {\n  text-align: center;\n  font-size: 1.5rem; }\n\n._2CspKGDhSw_rxzOHX3Vqy7 {\n  margin: 0 !important;\n  -ms-transform: translate(-50%, -50%);\n  -webkit-transform: translate(-50%, -50%);\n  -o-transform: translate(-50%, -50%);\n  -moz-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%); }\n", ""]);
 
 // exports
 exports.locals = {
@@ -11387,7 +11400,7 @@ exports = module.exports = __webpack_require__(5)(undefined);
 
 
 // module
-exports.push([module.i, "/*scss*/\n._2IGWg1TgaZCmnzl3XONEro {\n  margin: 0 5rem; }\n\n._89k545fsZih0tqoZHZU-H {\n  margin: 1em 0;\n  width: 85%; }\n\n._3fGlbev7QmvAV4ssNhddEB {\n  margin: 0 2rem; }\n", ""]);
+exports.push([module.i, "/*scss*/\n._2IGWg1TgaZCmnzl3XONEro {\n  margin: 0 5%; }\n\n._89k545fsZih0tqoZHZU-H {\n  margin: 1em 0;\n  width: 85%; }\n\n._3fGlbev7QmvAV4ssNhddEB {\n  margin: 0 2rem; }\n", ""]);
 
 // exports
 exports.locals = {
@@ -11818,13 +11831,12 @@ var Diary = function (_Component) {
 
 
             var temp = '';
-            console.log(content);
 
             var _content = content.map(function (ele, i) {
                 if (ele.attr === 1) {
                     return _react2.default.createElement(
                         'p',
-                        { key: i },
+                        { key: i, className: _style2.default.m0 },
                         ele.part
                     );
                 } else if (ele.attr === 2) {
@@ -11833,7 +11845,7 @@ var Diary = function (_Component) {
                         { key: i, className: _style2.default.pre },
                         _react2.default.createElement(
                             'code',
-                            null,
+                            { className: _style2.default.code },
                             ele.part
                         )
                     );
@@ -11849,7 +11861,7 @@ var Diary = function (_Component) {
                         { key: i, className: _style2.default.pre },
                         _react2.default.createElement(
                             'code',
-                            null,
+                            { className: _style2.default.code },
                             temp
                         )
                     );
@@ -11865,7 +11877,7 @@ var Diary = function (_Component) {
                 ),
                 _react2.default.createElement(
                     'div',
-                    { className: 'content' },
+                    { className: 'content ' + _style2.default.w },
                     _react2.default.createElement(
                         'div',
                         { className: 'summary' },
@@ -11932,12 +11944,15 @@ exports = module.exports = __webpack_require__(5)(undefined);
 
 
 // module
-exports.push([module.i, "/*scss*/\n._1NGDIdrAAMHrfFUrVpCePp {\n  width: 5rem !important; }\n\n.q1kmTJIBD5o-bRIjkemcP {\n  background-color: #ccc;\n  border-radius: 0.3rem;\n  line-height: 2.5rem;\n  padding: 1rem; }\n", ""]);
+exports.push([module.i, "/*scss*/\n._1NGDIdrAAMHrfFUrVpCePp {\n  width: 5rem !important; }\n\n.q1kmTJIBD5o-bRIjkemcP {\n  background-color: #ccc;\n  border-radius: 0.3rem;\n  line-height: 1.5rem;\n  padding: 1rem; }\n\n._6ztdvXO3nkaY7KJ6ctYzz {\n  margin: 0 !important; }\n\n._3y6PCkmZVEg7xpa1xS9jE1 {\n  word-break: break-word;\n  white-space: pre-wrap; }\n\n._25BhaVIasLWl2jtfXy3YTG {\n  width: calc(100% - 5rem); }\n", ""]);
 
 // exports
 exports.locals = {
 	"w5": "_1NGDIdrAAMHrfFUrVpCePp",
-	"pre": "q1kmTJIBD5o-bRIjkemcP"
+	"pre": "q1kmTJIBD5o-bRIjkemcP",
+	"m0": "_6ztdvXO3nkaY7KJ6ctYzz",
+	"code": "_3y6PCkmZVEg7xpa1xS9jE1",
+	"w": "_25BhaVIasLWl2jtfXy3YTG"
 };
 
 /***/ }),
@@ -11980,7 +11995,7 @@ exports = module.exports = __webpack_require__(5)(undefined);
 
 
 // module
-exports.push([module.i, "/*scss*/\n._-8LyyyUx--RjGIR_mv1hd {\n  margin: 2rem 5rem 0 !important; }\n", ""]);
+exports.push([module.i, "/*scss*/\n._-8LyyyUx--RjGIR_mv1hd {\n  margin: 2rem 5% 0 !important; }\n", ""]);
 
 // exports
 exports.locals = {

@@ -1,5 +1,4 @@
 import React,{Component} from 'react';
-
 import Diary from './../diary/Diary.js';
 
 import S from './style.scss';
@@ -7,7 +6,6 @@ import S from './style.scss';
 import 'whatwg-fetch';
 
 import 'promise-polyfill';
-
 export default class DiaryList extends Component{
     constructor(props){
         super(props);

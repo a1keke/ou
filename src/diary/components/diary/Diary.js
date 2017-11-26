@@ -14,13 +14,12 @@ export default class Diary extends Component{
 
 
         let temp = '';
-console.log(content);
-        
+
         let _content = content.map((ele,i)=>{
             if(ele.attr === 1){
-                return <p key={i}>{ele.part}</p>
+                return <p key={i} className={S.m0}>{ele.part}</p>
             }else if(ele.attr === 2){
-                return <pre key={i} className={S.pre}><code>{ele.part}</code></pre>
+                return <pre key={i} className={S.pre}><code className={S.code}>{ele.part}</code></pre>
             }else if(ele.attr === 3){
                 temp = '';
                 temp = temp+ele.part +'\n';
@@ -28,7 +27,7 @@ console.log(content);
                 temp = temp+ele.part +'\n';
             }else if(ele.attr === 4){
                 temp = temp+ele.part +'\n';
-                return <pre key={i} className={S.pre}><code>{temp}</code></pre>
+                return <pre key={i} className={S.pre}><code className={S.code}>{temp}</code></pre>
             }
         })
         return (
@@ -36,7 +35,7 @@ console.log(content);
                 <div className={`label ${S.w5}`}>
                     <img src="/static/resource/e2cd6ca52f67d1d413c338602cb7f61d.jpg" />
                 </div>
-                <div className="content">
+                <div className={`content ${S.w}`}>
                     <div className="summary">
                         <a>{title}</a>
                         <div className="date">{time}{week}</div>

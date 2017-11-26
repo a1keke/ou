@@ -94,12 +94,10 @@ exports.getChapter = function (req,res) {
 exports.saveDiary = function (req,res) {
     let data = req.body;
     
-    console.log(data);
-    
     let {title,content} = data;
 
-    mongodb.saveDiary({title,content},()=>{
-        res.send('ok')
+    mongodb.saveDiary({title,content},(result)=>{
+        res.json(result);
     })
 }
 
