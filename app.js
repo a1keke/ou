@@ -40,4 +40,4 @@ app.use('/biquge', function(req, res) {
     res.render('biquge/index', '');
 });
 
-app.listen(3000);
+app.listen(80);
