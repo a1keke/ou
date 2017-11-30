@@ -40,7 +40,11 @@ export default class Diary extends Component{
                         <a>{title}</a>
                         <div className="date">{time}{week}</div>
                     </div>
-                    {_content}
+                    <div className={S.mh10}>
+                        {_content}
+                        <div className={S.mask}></div>
+                    </div>
+                    <a className="ui attached label"><i className="large search icon"></i></a>
                 </div>
             </div>
         );
