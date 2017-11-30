@@ -17,4 +17,33 @@
 }
 .w {
     width: calc(100% - 5rem);
+    position: relative;
+    > a {
+        display: block;
+        text-align: center;
+        position: static !important;
+        background-color: #fff !important;
+    }
+}
+.mh10 {
+    max-height: calc(1em + 1.5rem*10 + 1rem);
+    position: relative;
+    overflow: hidden;
+}
+.tac {
+    text-align: center;
+    a {
+        display: block;
+        color: #ccc;
+    }
+}
+.mask{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100px;
+    width: 100%;
+    background:-moz-linear-gradient(bottom,rgba(255,255,255,0.1),rgba(255,255,255,0));
+    background:-webkit-gradient(linear,0 top,0 bottom,from(rgba(255,255,255,0)),to(#fff));
+    background:-o-linear-gradient(bottom,rgba(255,255,255,0.1),rgba(255,255,255,0));
 }

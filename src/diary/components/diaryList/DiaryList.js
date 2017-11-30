@@ -33,7 +33,6 @@ export default class DiaryList extends Component{
 
         return (
             <div className={`ui feed ${S.m}`}>
-                <div>&nbsp;&nbsp;</div>
                 {diaryCon}
             </div>
         );
