@@ -17,7 +17,7 @@ export default class Diary extends Component{
 
         let _content = content.map((ele,i)=>{
             if(ele.attr === 1){
-                return <p key={i} className={S.m0}>{ele.part}</p>
+                return <p key={i}>{ele.part}</p>
             }else if(ele.attr === 2){
                 return <pre key={i} className={S.pre}><code className={S.code}>{ele.part}</code></pre>
             }else if(ele.attr === 3){
