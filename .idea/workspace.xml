@@ -2,37 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e50c346a-5d9a-4292-9dbb-dec927803103" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/biquge.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/bookDetail.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/diary.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/e2cd6ca52f67d1d413c338602cb7f61d.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/jianshu.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/readPage.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/resource/e2cd6ca52f67d1d413c338602cb7f61d.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/semantic.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/semantic.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/basic/assets/fonts/icons.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/basic/assets/fonts/icons.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/basic/assets/fonts/icons.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/basic/assets/fonts/icons.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/default/assets/fonts/icons.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/default/assets/fonts/icons.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/default/assets/fonts/icons.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/default/assets/fonts/icons.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/default/assets/fonts/icons.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/default/assets/images/flags.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/github/assets/fonts/octicons-local.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/github/assets/fonts/octicons.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/github/assets/fonts/octicons.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/github/assets/fonts/octicons.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/material/assets/fonts/icons.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/material/assets/fonts/icons.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/material/assets/fonts/icons.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/material/assets/fonts/icons.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/themes/material/assets/fonts/icons.woff2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/vendors-manifest.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/vendors.dll.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -61,21 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DiaryList.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DiaryList.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/diary/components/diaryList/DiaryList.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="294">
               <caret line="34" column="46" lean-forward="false" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="7" lean-forward="false" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -342,12 +301,12 @@
       <workItem from="1511676507780" duration="14715000" />
       <workItem from="1511742990436" duration="143000" />
       <workItem from="1511743147688" duration="1382000" />
-      <workItem from="1511855271609" duration="16430000" />
+      <workItem from="1511855271609" duration="16856000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="225395000" />
+    <option name="totallyTimeSpent" value="225821000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
@@ -698,18 +657,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/diary/components/diaryList/DiaryList.js">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="34" column="46" lean-forward="false" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+        <state relative-caret-position="21">
+          <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/diary/components/diaryList/DiaryList.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="7" lean-forward="false" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
+        <state relative-caret-position="294">
+          <caret line="34" column="46" lean-forward="false" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
           <folding />
         </state>
       </provider>
