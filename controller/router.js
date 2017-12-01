@@ -1,6 +1,7 @@
 // 路由表
 // let file = require('./../model/file.js');
-let mongodb = require('./../model/mongodb.js')
+let mongodb = require('./../model/mongodb.js');
+let file = require('./../model/file.js');
 exports.showIndex = function (req,res) {
 
     file.getAllAlbumDir((albumDir)=>{
@@ -82,15 +83,6 @@ exports.getChapter = function (req,res) {
     })
 
 }
-// exports.getChaptersByName =function (req,res) {
-//
-//     mongodb.getChaptersByName(req,result=>{
-//
-//         res.json(result);
-//
-//     })
-//
-// }
 exports.saveDiary = function (req,res) {
     let data = req.body;
     
@@ -104,5 +96,10 @@ exports.saveDiary = function (req,res) {
 exports.getAllDiary = function (req,res) {
     mongodb.getAllDiary(result=>{
         res.json(result);
+    })
+}
+exports.upImages = function (req,res) {
+    file.upImages(req,()=>{
+        res.send({code:'1'});
     })
 }

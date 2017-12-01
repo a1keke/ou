@@ -4,7 +4,6 @@ import React,{Component} from 'react';
 import Toast from './../toast/Toast.js';
 
 import S from './style.scss';
-
 import 'whatwg-fetch';
 import 'promise-polyfill';
 export default class DiaryTextarea extends Component{
@@ -24,11 +23,28 @@ export default class DiaryTextarea extends Component{
         this.fomartContent = this.fomartContent.bind(this);
         this.hasTab = this.hasTab.bind(this);
         this.noTab = this.noTab.bind(this);
+        this.changeImage = this.changeImage.bind(this);
     };
 
     changeTitle(ev){this.setState({title:ev.target.value})};
 
     changeContent(ev){this.setState({content:ev.target.value})};
+
+    changeImage(ev){
+        let {imagesForm} = this.refs;
+
+        let form = new FormData(imagesForm);
+
+        fetch('/diary/upImages',{
+            method:'POST',
+            body:form
+        }).then(res=>{
+            return res.json();
+        }).then(res=>{
+            console.log(res);
+        })
+
+    };
 
     tabEvent(ev){
         if(ev.keyCode===9){
@@ -174,30 +190,35 @@ export default class DiaryTextarea extends Component{
         this.setState({toastMsg,toastFlag:!toastFlag});
 
     }
-
     render(){
 
-        let {changeTitle,changeContent,saveDairy,changeToast,tabEvent} = this;
+        let {changeTitle,changeContent,saveDairy,changeToast,tabEvent,changeImage} = this;
 
         let {toastMsg,toastFlag} = this.state;
 
         return (
-            <form className={`ui reply form ${S.m}`} action="./dairy/saveDairy">
-                <div className={`ui labeled input ${S.mb}`}>
-                    <a className="ui label">title</a>
-                    <input type="text" placeholder="请输入标题" name="title" onChange={changeTitle} />
-                </div>
-                <div className="field">
-                    <textarea name="content" onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
-                </div>
-                <div className="ui blue labeled submit icon button"
-                    onClick={saveDairy}
-                >
-                    <i className="icon edit"></i>
-                    save
-                </div>
+            <div>
+                <form className={`ui reply form ${S.m}`} encType="multipart/form-data" ref="imagesForm">
+                    <div className={`ui labeled input ${S.mb}`}>
+                        <a className="ui label">title</a>
+                        <input type="text" placeholder="请输入标题"  onChange={changeTitle} />
+                    </div>
+                    <div className="field">
+                        <textarea onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
+                    </div>
+                    <div className="ui blue labeled submit icon button"
+                         onClick={saveDairy}
+                    >
+                        <i className="icon edit"></i>
+                        save
+                    </div>
+                    <div className={`${S.fileBox}`}>
+                        <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" />
+                        <i className='large image icon' title="up Images"></i>
+                    </div>
+                </form>
                 <Toast {...{text:toastMsg,flag:toastFlag,changeToast}}/>
-            </form>
+            </div>
         );
     }
 }

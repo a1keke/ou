@@ -9,7 +9,7 @@ var app = express();
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
-// app.use(bodyParser.urlencoded({ extended: true,limit:'200kb' }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit:'200kb' }));
 app.use('/static',express.static('./static'))
 app.use('/jianshu', function(req, res) {
@@ -18,6 +18,7 @@ app.use('/jianshu', function(req, res) {
 //接口
 app.use('/diary/getAllDiary',router.getAllDiary);
 app.post('/diary/saveDiary',router.saveDiary);
+app.post('/diary/upImages',router.upImages);
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);
