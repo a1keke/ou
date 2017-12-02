@@ -99,7 +99,7 @@ exports.getAllDiary = function (req,res) {
     })
 }
 exports.upImages = function (req,res) {
-    file.upImages(req,()=>{
-        res.send({code:'1'});
+    file.upImages(req,(result)=>{
+        res.send(result);
     })
 }

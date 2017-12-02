@@ -1,14 +1,13 @@
 /*scss*/
-
-.m {
-    margin: 0 5%;
-}
 .mb  {
-    margin:1em 0;
+    margin-bottom:1em;
     width:85%;
 }
 .m2 {
     margin: 0 2rem;
+}
+.mtm5 {
+    margin:1em 5% !important;
 }
 .fileBox {
     display: inline;
@@ -31,5 +30,11 @@
         opacity: 0;
         cursor: pointer;
 
+    }
+}
+.images {
+    margin:0 5% !important;
+    img {
+        cursor: pointer;
     }
 }

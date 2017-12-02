@@ -13,7 +13,9 @@ export default class DiaryTextarea extends Component{
             title:'',
             content:'',
             toastFlag:false,
-            toastMsg:''
+            toastMsg:'1',
+            images:[],
+            imagesValue:''
         }
         this.changeTitle = this.changeTitle.bind(this);
         this.changeContent = this.changeContent.bind(this);
@@ -29,9 +31,11 @@ export default class DiaryTextarea extends Component{
     changeTitle(ev){this.setState({title:ev.target.value})};
 
     changeContent(ev){this.setState({content:ev.target.value})};
-
+//图片上传
     changeImage(ev){
         let {imagesForm} = this.refs;
+
+        let {images,content} = this.state;
 
         let form = new FormData(imagesForm);
 
@@ -41,11 +45,19 @@ export default class DiaryTextarea extends Component{
         }).then(res=>{
             return res.json();
         }).then(res=>{
-            console.log(res);
+            let num = images.length;
+            res.images.map((ele,i)=>{
+                ele.index = num;
+                if(content.lastIndexOf('\n')!==content.length-1) content += '\n';
+                content += '图片'+(num+1)+'(此行不可修改！只能通过点击图片删除此行)\n';
+                num++;
+            })
+            images = images.concat(res.images);
+            this.setState({content,images})
         })
 
     };
-
+//输入框支持tab键
     tabEvent(ev){
         if(ev.keyCode===9){
             let _content = this.refs.content;
@@ -58,7 +70,7 @@ export default class DiaryTextarea extends Component{
             ev.preventDefault();
         }
     }
-
+//提交diary
     saveDairy(){
 
         let {changeToast,fomartContent} = this;
@@ -91,7 +103,7 @@ export default class DiaryTextarea extends Component{
         })
 
     }
-
+//对content进行处理
     fomartContent(content){
         let {hasTab,noTab} = this;
 
@@ -194,17 +206,30 @@ export default class DiaryTextarea extends Component{
 
         let {changeTitle,changeContent,saveDairy,changeToast,tabEvent,changeImage} = this;
 
-        let {toastMsg,toastFlag} = this.state;
+        let {title,content,imagesValue,toastMsg,toastFlag,images} = this.state;
+
+        let imagesArr = images.length?(
+            <div className={`ui tiny images ${S.images}`}>
+                {
+                    images.map((ele,i)=>{
+                        let {url} = ele;
+                        return (
+                            <img className="ui image" src={url} key={i} title={`图片${i+1},点击删除`} />
+                        )
+                    })
+                }
+            </div>
+        ):null;
 
         return (
             <div>
-                <form className={`ui reply form ${S.m}`} encType="multipart/form-data" ref="imagesForm">
+                <form className={`ui reply form ${S.mtm5}`} encType="multipart/form-data" ref="imagesForm">
                     <div className={`ui labeled input ${S.mb}`}>
                         <a className="ui label">title</a>
-                        <input type="text" placeholder="请输入标题"  onChange={changeTitle} />
+                        <input value={title} type="text" placeholder="请输入标题"  onChange={changeTitle} />
                     </div>
                     <div className="field">
-                        <textarea onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
+                        <textarea value={content} onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
                     </div>
                     <div className="ui blue labeled submit icon button"
                          onClick={saveDairy}
@@ -213,11 +238,12 @@ export default class DiaryTextarea extends Component{
                         save
                     </div>
                     <div className={`${S.fileBox}`}>
-                        <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" />
+                        <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" value={imagesValue} />
                         <i className='large image icon' title="up Images"></i>
                     </div>
                 </form>
                 <Toast {...{text:toastMsg,flag:toastFlag,changeToast}}/>
+                {imagesArr}
             </div>
         );
     }

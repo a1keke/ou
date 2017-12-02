@@ -3,9 +3,11 @@ let express = require('express');
 let path = require('path')
 let ejs = require('ejs');
 let bodyParser = require('body-parser');
+//处理multipart/form-data类型的post
+let multer = require('multer');
+let upload = multer({dest:'./static/resource'})
 let router = require('./controller');
 var app = express();
-//test1111
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
@@ -18,7 +20,7 @@ app.use('/jianshu', function(req, res) {
 //接口
 app.use('/diary/getAllDiary',router.getAllDiary);
 app.post('/diary/saveDiary',router.saveDiary);
-app.post('/diary/upImages',router.upImages);
+app.post('/diary/upImages',upload.array('images'),router.upImages);
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);
