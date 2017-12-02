@@ -5,7 +5,7 @@ let ejs = require('ejs');
 let bodyParser = require('body-parser');
 //处理multipart/form-data类型的post
 let multer = require('multer');
-let upload = multer({dest:'./static/resource'})
+let upload = multer({dest:'./static/upload'})
 let router = require('./controller');
 var app = express();
 app.set('view engine', 'html');
