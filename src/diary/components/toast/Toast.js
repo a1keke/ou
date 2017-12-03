@@ -8,7 +8,7 @@ export default class Toast extends Component{
     }
     render(){
 
-        let {text,flag,changeToast} = this.props;
+        let {text,flag,changeToast,btnEvent} = this.props;
         
         return (
             <div
@@ -25,8 +25,8 @@ export default class Toast extends Component{
                         <p className={S.tac}>{text}</p>
                     </div>
                     <div className={`actions`}>
-                        <div className="ui positive right labeled icon button">
-                            OK
+                        <div className="ui positive right labeled icon button" onClick={btnEvent}>
+                            yes
                             <i className="checkmark icon"></i>
                         </div>
                     </div>

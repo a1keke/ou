@@ -15,7 +15,8 @@ export default class DiaryTextarea extends Component{
             toastFlag:false,
             toastMsg:'1',
             images:[],
-            imagesValue:''
+            imagesValue:'',
+            btnEvent:null
         }
         this.changeTitle = this.changeTitle.bind(this);
         this.changeContent = this.changeContent.bind(this);
@@ -26,6 +27,7 @@ export default class DiaryTextarea extends Component{
         this.hasTab = this.hasTab.bind(this);
         this.noTab = this.noTab.bind(this);
         this.changeImage = this.changeImage.bind(this);
+        this.deleteImage = this.deleteImage.bind(this);
     };
 
     changeTitle(ev){this.setState({title:ev.target.value})};
@@ -57,6 +59,21 @@ export default class DiaryTextarea extends Component{
         })
 
     };
+    // 删除图片
+    deleteImage(name,key){
+        let url = '/diary/deleteImage'
+        fetch('/diary/deleteImage',{
+            type:'GET',
+            header:{
+                'Content-Type': 'application/json'
+            },
+            body:{name,key}
+        }).then(res=>res.json()).then(res=>{
+            console.log(res);
+        }).catch(res=>{
+            console.log(res);
+        })
+    }
 //输入框支持tab键
     tabEvent(ev){
         if(ev.keyCode===9){
@@ -78,7 +95,7 @@ export default class DiaryTextarea extends Component{
         let {title,content} = this.state;
 
         if(title==='' || content ===''){
-            changeToast('title or content cant empty');
+            changeToast('标题或者内容均不能为空');
             return false;
         }
 
@@ -96,10 +113,10 @@ export default class DiaryTextarea extends Component{
             return res.json();
         }).then(res=>{
             let {code} = res;
-            code === 1? changeToast('save success,please refresh'):changeToast('save fail');
+            code === 1? changeToast('保存成功，请刷新本页'):changeToast('保存失败');
 
         }).catch(res=>{
-            changeToast('save fail');
+            changeToast('保存失败');
         })
 
     }
@@ -192,29 +209,40 @@ export default class DiaryTextarea extends Component{
 
     noTab(part){return part.substr(0,4)!=='    ';}
 
-    changeToast(msg){
+    changeToast(msg,cb){
         let toastMsg = '';
+        let btnEvent = null;
         if(msg){
             toastMsg = msg;
         }
+        if(cb){
+            btnEvent = cb;
+        }
         let {toastFlag} = this.state;
 
-        this.setState({toastMsg,toastFlag:!toastFlag});
+        this.setState({toastMsg,toastFlag:!toastFlag,btnEvent});
 
     }
     render(){
 
-        let {changeTitle,changeContent,saveDairy,changeToast,tabEvent,changeImage} = this;
+        let {changeTitle,changeContent,saveDairy,changeToast,tabEvent,changeImage,deleteImage} = this;
 
-        let {title,content,imagesValue,toastMsg,toastFlag,images} = this.state;
+        let {title,content,imagesValue,toastMsg,toastFlag,images,btnEvent} = this.state;
 
         let imagesArr = images.length?(
             <div className={`ui tiny images ${S.images}`}>
                 {
                     images.map((ele,i)=>{
-                        let {url} = ele;
+                        let {url,name,key} = ele;
                         return (
-                            <img className="ui image" src={url} key={i} title={`图片${i+1},点击删除`} />
+                            <img className="ui image"
+                                 src={url}
+                                 key={i}
+                                 title={`图片${i+1},点击删除`}
+                                 onClick={()=>changeToast('是否确定要删除这张图片？',()=>{
+                                     deleteImage(name,key)
+                                 })}
+                            />
                         )
                     })
                 }
@@ -242,7 +270,7 @@ export default class DiaryTextarea extends Component{
                         <i className='large image icon' title="up Images"></i>
                     </div>
                 </form>
-                <Toast {...{text:toastMsg,flag:toastFlag,changeToast}}/>
+                <Toast {...{text:toastMsg,flag:toastFlag,changeToast,btnEvent}}/>
                 {imagesArr}
             </div>
         );
