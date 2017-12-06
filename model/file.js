@@ -22,6 +22,21 @@ exports.upImages = function (req,cb) {
 
 }
 
+exports.deleteImage = function (args,cb) {
+
+    let {name,key,url} = args;
+
+    if(!key || name !== _decrypt(key)){
+        cb({code:0,err:'key error'});
+        return false;
+    }
+
+    fs.unlink(url,err=>{
+        err?cb({code:0,err:'delete err'}):cb({code:1});
+    })
+}
+
+
 function _getMIME(type) {
     let MIME = '';
     switch (type){

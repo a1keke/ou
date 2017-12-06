@@ -84,10 +84,8 @@ exports.getChapter = function (req,res) {
 
 }
 exports.saveDiary = function (req,res) {
-    let data = req.body;
+    let {title,content} = req.body;
     
-    let {title,content} = data;
-
     mongodb.saveDiary({title,content},(result)=>{
         res.json(result);
     })
@@ -101,5 +99,11 @@ exports.getAllDiary = function (req,res) {
 exports.upImages = function (req,res) {
     file.upImages(req,(result)=>{
         res.send(result);
+    })
+}
+exports.deleteImage = function (req,res) {
+    let {name,key,url} = req.body;
+    file.deleteImage({name,key,url},result=>{
+        res.json(result);
     })
 }

@@ -60,16 +60,53 @@ export default class DiaryTextarea extends Component{
 
     };
     // 删除图片
-    deleteImage(name,key){
-        let url = '/diary/deleteImage'
+    deleteImage(name,key,url){
         fetch('/diary/deleteImage',{
-            type:'GET',
-            header:{
+            method:'POST',
+            headers:{
                 'Content-Type': 'application/json'
             },
-            body:{name,key}
+            body:JSON.stringify({name,key,url})
         }).then(res=>res.json()).then(res=>{
-            console.log(res);
+            if(res.code===0){
+                let {changeToast} = this;
+                console.log('deleteImage fail,result is' + res.err);
+                setTimeout(()=>{
+                    changeToast('删除失败，请稍后再试');
+                },300);
+                return false;
+            }
+
+            let {images,content} = this.state;
+
+            let index = 0;
+            
+            images = images.filter((ele,i)=>{
+                if(ele.name === name){
+                    index = i+1;
+                    return false;
+                }
+                return true;
+            })
+
+            content = content.split('\n').filter(ele=>{
+                if(ele.indexOf('此行不可修改！') != -1 || ele.indexOf('只能通过点击图片删除此行') != -1){
+                    let _index = ele.substring(ele.indexOf('片')+1,ele.indexOf('('));
+                    return _index != index;
+                }
+                return true;
+            }).map(ele=>{
+                if(ele.indexOf('此行不可修改！') != -1 || ele.indexOf('只能通过点击图片删除此行') != -1){
+                    let _index = ele.substring(ele.indexOf('片')+1,ele.indexOf('('));
+                    if(_index > index){
+                        ele = ele.replace(_index,_index-1);
+                    }
+                }
+                return ele;
+            }).join('\n');
+
+            this.setState({images,content});
+
         }).catch(res=>{
             console.log(res);
         })
@@ -208,6 +245,13 @@ export default class DiaryTextarea extends Component{
     hasTab(part){return part.substr(0,4)==='    ';}
 
     noTab(part){return part.substr(0,4)!=='    ';}
+    // 判断这行内容是不是图片，是返回图片的index，不是返回9999
+    isImageConetnt(content){
+        if(content.indexOf('此行不可修改！') != -1 || content.indexOf('只能通过点击图片删除此行') != -1){
+            return content.substring(content.indexOf('片')+1,content.indexOf('('))-1;
+        }
+        return 9999;
+    }
 
     changeToast(msg,cb){
         let toastMsg = '';
@@ -240,7 +284,7 @@ export default class DiaryTextarea extends Component{
                                  key={i}
                                  title={`图片${i+1},点击删除`}
                                  onClick={()=>changeToast('是否确定要删除这张图片？',()=>{
-                                     deleteImage(name,key)
+                                     deleteImage(name,key,url)
                                  })}
                             />
                         )
