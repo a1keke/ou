@@ -34,12 +34,12 @@ export default class Diary extends Component{
         }).filter(ele=>ele);
 
         _content = content.length > 8?(
-            <div className={S.mh10}>
+            <div className={`${S.mh10} ${S.content}`}>
                 {_content}
                 <div className={S.mask}></div>
             </div>
         ):(
-            <div>{_content}</div>
+            <div className={S.content}>{_content}</div>
         );
 
         let moreIcon = content.length > 8?(
