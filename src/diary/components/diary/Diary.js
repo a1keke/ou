@@ -28,8 +28,24 @@ export default class Diary extends Component{
             }else if(ele.attr === 4){
                 temp = temp+ele.part +'\n';
                 return <pre key={i} className={S.pre}><code className={S.code}>{temp}</code></pre>
+            }else if(ele.attr === 6){
+                return <img src={ele.part} key={i}/>
             }
-        })
+        }).filter(ele=>ele);
+
+        _content = content.length > 8?(
+            <div className={S.mh10}>
+                {_content}
+                <div className={S.mask}></div>
+            </div>
+        ):(
+            <div>{_content}</div>
+        );
+
+        let moreIcon = content.length > 8?(
+            <a className="ui attached label"><i className="large search icon"></i></a>
+        ):(null);
+
         return (
             <div className="event">
                 <div className={`label ${S.w5}`}>
@@ -40,11 +56,8 @@ export default class Diary extends Component{
                         <a>{title}</a>
                         <div className="date">{time}{week}</div>
                     </div>
-                    <div className={S.mh10}>
-                        {_content}
-                        <div className={S.mask}></div>
-                    </div>
-                    <a className="ui attached label"><i className="large search icon"></i></a>
+                    {_content}
+                    {moreIcon}
                 </div>
             </div>
         );

@@ -28,6 +28,7 @@ export default class DiaryTextarea extends Component{
         this.noTab = this.noTab.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.deleteImage = this.deleteImage.bind(this);
+        this.noCodeConetnt = this.noCodeConetnt.bind(this);
     };
 
     changeTitle(ev){this.setState({title:ev.target.value})};
@@ -35,8 +36,8 @@ export default class DiaryTextarea extends Component{
     changeContent(ev){this.setState({content:ev.target.value})};
 //图片上传
     changeImage(ev){
+        let {changeToast} = this;
         let {imagesForm} = this.refs;
-
         let {images,content} = this.state;
 
         let form = new FormData(imagesForm);
@@ -47,6 +48,10 @@ export default class DiaryTextarea extends Component{
         }).then(res=>{
             return res.json();
         }).then(res=>{
+            if(res.code===0){
+                changeToast('上传失败，请不要上传非法的类型');
+                return false;
+            }
             let num = images.length;
             res.images.map((ele,i)=>{
                 ele.index = num;
@@ -159,7 +164,7 @@ export default class DiaryTextarea extends Component{
     }
 //对content进行处理
     fomartContent(content){
-        let {hasTab,noTab} = this;
+        let {hasTab,noTab,noCodeConetnt} = this;
 
         let _content = content.split('\n');
 
@@ -176,7 +181,7 @@ export default class DiaryTextarea extends Component{
                 if(hasTab(_content[0])) {
                     result.push({attr: 2, part:_content[0].substring(4,_content[0].length)});
                 }else {
-                    result.push({attr: 1, part:_content[0]});
+                    noCodeConetnt(result,_content[0]);
                 }
                 break;
             case 2:
@@ -184,13 +189,13 @@ export default class DiaryTextarea extends Component{
                     result.push({attr: 3, part:_content[0].substring(4,_content[0].length)});
                     result.push({attr: 4, part:_content[1].substring(4,_content[1].length)});
                 }else if(noTab(_content[0]) && noTab(_content[1])){
-                    result.push({attr: 1, part:_content[0]});
-                    result.push({attr: 1, part:_content[1]});
+                    noCodeConetnt(result,_content[0]);
+                    noCodeConetnt(result,_content[1]);
                 }else if(hasTab(_content[0]) && noTab(_content[1])){
                     result.push({attr: 2, part:_content[0].substring(4,_content[0].length)});
-                    result.push({attr: 1, part:_content[1]});
+                    noCodeConetnt(result,_content[1]);
                 }else if(noTab(_content[0]) && noTab(_content[1])){
-                    result.push({attr: 1, part:_content[0]});
+                    noCodeConetnt(result,_content[0]);
                     result.push({attr: 2, part:_content[1].substring(4,_content[1].length)});
                 }
                 break;
@@ -204,7 +209,7 @@ export default class DiaryTextarea extends Component{
                         }else if(hasTab(now) && noTab(next)){
                             result.push({attr:2,part:now.substring(4,now.length)})
                         }else if(noTab(now)){
-                            result.push({attr:1,part:now})
+                            noCodeConetnt(result,now);
                         }
                         continue;
                     }
@@ -216,14 +221,14 @@ export default class DiaryTextarea extends Component{
                         }else if(hasTab(now) && noTab(prev)){
                             result.push({attr:2,part:now.substring(4,now.length)})
                         }else if(noTab(now)){
-                            result.push({attr:1,part:now})
+                            noCodeConetnt(result,now);
                         }
                         continue;
                     }
                     //中间的
                     let prev=_content[i-1],now = _content[i],next=_content[i+1];
                     if(noTab(now)){
-                        result.push({attr:1,part:now})
+                        noCodeConetnt(result,now);
                     }else if(hasTab(prev) && hasTab(now) && hasTab(next)){
                         result.push({attr:5,part:now.substring(4,now.length)})
                     }else if(hasTab(prev) && hasTab(now) && noTab(next)){
@@ -245,12 +250,25 @@ export default class DiaryTextarea extends Component{
     hasTab(part){return part.substr(0,4)==='    ';}
 
     noTab(part){return part.substr(0,4)!=='    ';}
-    // 判断这行内容是不是图片，是返回图片的index，不是返回9999
-    isImageConetnt(content){
+    /*
+    * 对非代码的内容进行处理
+    * images 图片的数组
+    * content 要进行判断的内容
+    * result 要插入的结果数组
+    *
+    * */
+    noCodeConetnt(result,content){
+        let index = 0 ;
+        // 判断是否为图片内容
         if(content.indexOf('此行不可修改！') != -1 || content.indexOf('只能通过点击图片删除此行') != -1){
-            return content.substring(content.indexOf('片')+1,content.indexOf('('))-1;
+            let {images} = this.state;
+            index = content.substring(content.indexOf('片')+1,content.indexOf('('))-1;
+            result.push({attr:6,part:images[index].url})
+        }else {
+            result.push({attr:1,part:content})
         }
-        return 9999;
+
+
     }
 
     changeToast(msg,cb){
@@ -310,7 +328,7 @@ export default class DiaryTextarea extends Component{
                         save
                     </div>
                     <div className={`${S.fileBox}`}>
-                        <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" value={imagesValue} />
+                        <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" value={imagesValue} accept="image/jpeg,image/png,image/bmp" />
                         <i className='large image icon' title="up Images"></i>
                     </div>
                 </form>

@@ -5,11 +5,25 @@ let path = require('path');
 let uuid = require('uuid');
 let crypto = require('crypto');
 const SECRET_KEY = 'qianke';
+const MIMES = 'image/jpeg,image/png,image/bmp'
 exports.upImages = function (req,cb) {
 
+    let {files} = req;
+
+    // 非法检测
+    let errFlag = files.some(ele=> MIMES.indexOf(ele.mimetype) === -1)
+    if(errFlag){
+        files.map(ele=>{
+            fs.unlinkSync(ele.path);
+        })
+        cb({code:0,err:'illegal mimetype'})
+        return false;
+    }
+
+    console.log(errFlag);
     let images = [];
 
-    req.files.map((ele,i)=>{
+    files.map((ele,i)=>{
         let {mimetype,filename,path} = ele;
         let key = _encrypt(filename);
         let mime = _getMIME(mimetype);
