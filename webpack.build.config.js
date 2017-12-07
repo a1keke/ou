@@ -3,7 +3,7 @@ let path = require('path');
 let webpack = require('webpack');
 module.exports = {
     entry: {
-        jianshu:path.resolve(__dirname,'src/jianshu/app.js'),
+        /*jianshu:path.resolve(__dirname,'src/jianshu/app.js'),*/
         biquge:path.resolve(__dirname,'src/biquge/app.js'),
         bookDetail:path.resolve(__dirname,'src/biquge/bookDetail.js'),
         readPage:path.resolve(__dirname,'src/biquge/readPage.js'),
