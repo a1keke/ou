@@ -7,6 +7,8 @@ export default class Diary extends Component{
         super(props);
     }
     render(){
+
+        console.log(this.props);
         
         let {diary} = this.props;
         

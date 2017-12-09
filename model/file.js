@@ -20,7 +20,6 @@ exports.upImages = function (req,cb) {
         return false;
     }
 
-    console.log(errFlag);
     let images = [];
 
     files.map((ele,i)=>{
