@@ -28,11 +28,14 @@
 .content {
     position: relative;
     overflow: hidden;
+    margin: 0.5rem 0;
     p {
         margin: 0 !important;
     }
     img {
         width: 80%;
+        max-width: 30rem;
+        margin: 1rem 0;
     }
 }
 .tac {
