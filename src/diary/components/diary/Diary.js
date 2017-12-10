@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-
+import {Link} from 'react-router-dom';
 import S from './style.scss';
 
 export default class Diary extends Component{
@@ -8,12 +8,9 @@ export default class Diary extends Component{
     }
     render(){
 
-        console.log(this.props);
-        
-        let {diary} = this.props;
-        
-        let {index,time,week,title,content} = diary;
+        let {diary,isDetail} = this.props;
 
+        let {index,time,week,title,content} = diary;
 
         let temp = '';
 
@@ -35,7 +32,7 @@ export default class Diary extends Component{
             }
         }).filter(ele=>ele);
 
-        _content = content.length > 8?(
+        _content = content.length > 8 && !isDetail?(
             <div className={`${S.mh10} ${S.content}`}>
                 {_content}
                 <div className={S.mask}></div>
@@ -44,8 +41,8 @@ export default class Diary extends Component{
             <div className={S.content}>{_content}</div>
         );
 
-        let moreIcon = content.length > 8?(
-            <a className="ui attached label"><i className="large search icon"></i></a>
+        let moreIcon = content.length > 8 && !isDetail?(
+            <Link to={`/diary/${title}`} className="ui attached label"><i className="large search icon"></i></Link>
         ):(null);
 
         return (
@@ -55,7 +52,7 @@ export default class Diary extends Component{
                 </div>
                 <div className={`content ${S.w}`}>
                     <div className="summary">
-                        <a>{title}</a>
+                        <Link to={`/diary/${title}`}>{title}</Link>
                         <div className="date">{time}{week}</div>
                     </div>
                     {_content}

@@ -90,7 +90,7 @@ exports.getBookNameBybid = function (req,cb) {
         cb({code:0,err});
     })
 }
-// 存一片日记
+// 存一篇日记
 exports.saveDiary = function (args,cb) {
     (
         async ()=>{
@@ -102,10 +102,10 @@ exports.saveDiary = function (args,cb) {
 
             let db = await mongodbClient.connect(DIARY_URL);
 
-            let diary = await db.collection('diary');
+            let diaryDB = await db.collection('diary');
 
             try{
-                await diary.insert({index:index+1,time,week,title,content});
+                await diaryDB.insert({index:index+1,time,week,title,content});
 
                 await db.close();
 
@@ -150,6 +150,31 @@ exports.getAllDiary = function (cb) {
         }
     )()
 
+}
+// 取出一篇日记
+exports.getDiary = function (args,cb) {
+    (
+        async(args,cb)=>{
+            let {title} = args;
+
+            let db = await mongodbClient.connect(DIARY_URL);
+
+            let diaryDB = await db.collection('diary');
+
+            try{
+
+                let diary = await diaryDB.find({title}).toArray();
+                await db.close();
+
+                diary.length?cb({code:1,diary:diary[0]}):cb({code:0,err:'cant find'});
+
+            }catch (e){
+                await db.close();
+                await cb({code:0,err:e})
+            }
+
+        }
+    )(args,cb)
 }
 //根据传入的bookid查找书名
 function _getBookNameBybid(bid) {

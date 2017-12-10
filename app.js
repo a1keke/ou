@@ -22,6 +22,7 @@ app.use('/diary/getAllDiary',router.getAllDiary);
 app.post('/diary/saveDiary',router.saveDiary);
 app.post('/diary/upImages',upload.array('images'),router.upImages);
 app.post('/diary/deleteImage',router.deleteImage);
+app.post('/diary/getDiary',router.getDiary)
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);

@@ -6,7 +6,7 @@
             // biquge:path.resolve(__dirname,'src/biquge/app.js'),
             // bookDetail:path.resolve(__dirname,'src/biquge/bookDetail.js'),
             // readPage:path.resolve(__dirname,'src/biquge/readPage.js')
-            diary:path.resolve(__dirname,'src/diary/index.js')
+            diary:path.resolve(__dirname,'src/diary/app-diary.js')
         },
         output: {
             path: path.resolve(__dirname,'static'),

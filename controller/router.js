@@ -98,7 +98,7 @@ exports.getAllDiary = function (req,res) {
 }
 exports.upImages = function (req,res) {
     file.upImages(req,(result)=>{
-        res.send(result);
+        res.json(result);
     })
 }
 exports.deleteImage = function (req,res) {
@@ -106,4 +106,12 @@ exports.deleteImage = function (req,res) {
     file.deleteImage({name,key,url},result=>{
         res.json(result);
     })
+}
+exports.getDiary = function (req,res) {
+    let {title} = req.body
+    mongodb.getDiary({title},result=>{
+        res.json(result)
+    })
+
+
 }
