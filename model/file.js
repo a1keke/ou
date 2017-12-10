@@ -28,7 +28,7 @@ exports.upImages = function (req,cb) {
         let mime = _getMIME(mimetype);
         let _path = path+mime;
         fs.renameSync(path,path+mime);
-        images.push({name:filename,url:_path,key})
+        images.push({name:filename,url:'/'+_path,key})
     })
 
     cb({code:1,images})

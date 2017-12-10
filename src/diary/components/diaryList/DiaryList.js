@@ -26,7 +26,6 @@ export default class DiaryList extends Component{
 
     render(){
         let {diary} = this.state;
-        console.log(diary);
         let diaryCon = diary.map((ele,i)=>{
             return <Diary {...{diary:ele,isDetail:false,key:i}}/>
         })

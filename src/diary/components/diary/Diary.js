@@ -31,7 +31,6 @@ export default class Diary extends Component{
                 return <img src={ele.part} key={i}/>
             }
         }).filter(ele=>ele);
-
         _content = content.length > 8 && !isDetail?(
             <div className={`${S.mh10} ${S.content}`}>
                 {_content}
