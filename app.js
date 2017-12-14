@@ -11,7 +11,6 @@ var app = express();
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
-app.use(router.public)
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit:'200kb' }));
 app.use('/static',express.static('./static'))
@@ -29,7 +28,7 @@ app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);
 app.get("/biquge/interface/getChapter",router.getChapter)
 app.get('/biquge/interface/getBookName',router.getBookNameBybid);
-
+app.use(router.public);
 // 页面
 //页面--日记
 app.use('/diary',(req,res)=>{

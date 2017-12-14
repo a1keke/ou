@@ -2,11 +2,14 @@
 
 let mongodb = require('mongodb');
 let querystring = require('querystring');
+let http = require('http');
 let mongodbClient = mongodb.MongoClient;
 
 const BQG_URL = 'mongodb://localhost:27017/biquge';
 
 const DIARY_URL = 'mongodb://localhost:27017/diary';
+
+const BASEINFO_URL = 'mongodb://localhost:27017/baseInfo';
 
 
 // 查
@@ -176,6 +179,62 @@ exports.getDiary = function (args,cb) {
         }
     )(args,cb)
 }
+
+
+
+
+//存ip
+exports.saveIp = function (req) {
+    (
+        async(req)=>{
+            let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
+
+            let db = await mongodbClient.connect(BASEINFO_URL);
+
+            let ipDB = await db.collection('ip');
+
+            let ipArr = await ipDB.find({ip}).toArray();
+            //如果存在ip，更新时间
+            if(ipArr.length){
+                await ipDB.update({ip},{$set:{time:_getNowFormatDate().time}});
+                await db.close();
+                return false;
+            }
+
+            let ipInfo = null
+            let opt = {
+                host:'ip.taobao.com',
+                method:'GET',
+                path:'/service/getIpInfo.php?ip='+ip,
+            };
+            let searchIp = await http.request(opt,res=>{
+                res.setEncoding('utf8');
+                res.on('data',async chunk=>{
+                    let _chunk = JSON.parse(chunk);
+                    //没查到ip的信息
+                    if(_chunk.code || _chunk.data.country==='内网ip'){
+                        await ipDB.insert({ip,time:_getNowFormatDate().time});
+                        await db.close();
+                        return false;
+                    }
+                    ipInfo = _chunk.data;
+                    let {country,area,region,city,county,isp} = ipInfo
+                    await ipDB.insert({country,area,region,city,county,isp,ip,time:_getNowFormatDate().time});
+                    await db.close();
+                });
+            });
+            searchIp.on('error',e=>{
+                console.log('error:'+e);
+            })
+            searchIp.end();
+        }
+    )(req)
+
+}
+
+
+
+
 //根据传入的bookid查找书名
 function _getBookNameBybid(bid) {
     return new Promise((res,rej)=>{
