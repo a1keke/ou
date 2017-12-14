@@ -11,6 +11,7 @@ var app = express();
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
+app.use(router.public)
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit:'200kb' }));
 app.use('/static',express.static('./static'))

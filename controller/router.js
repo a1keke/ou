@@ -2,6 +2,12 @@
 // let file = require('./../model/file.js');
 let mongodb = require('./../model/mongodb.js');
 let file = require('./../model/file.js');
+//public
+exports.public = function (req,res,next) {
+    console.log(req.ip);
+    next();
+}
+
 exports.showIndex = function (req,res) {
 
     file.getAllAlbumDir((albumDir)=>{
@@ -31,12 +37,6 @@ exports.showAblum =function (req,res,next) {
 
 }
 
-exports.show404 = function (req,res) {
-
-    res.render('404');
-
-}
-
 exports.doupByGet = function (req,res) {
 
     file.getAllAlbumDir((albumDir)=>{
@@ -54,6 +54,7 @@ exports.doupByPost = function (req,res) {
 
     });
 }
+//笔趣阁
 exports.getBookNameBybid = function (req,res) {
     mongodb.getBookNameBybid(req,result=>{
         res.json(result);
@@ -83,6 +84,7 @@ exports.getChapter = function (req,res) {
     })
 
 }
+//diary
 exports.saveDiary = function (req,res) {
     let {title,content} = req.body;
     
