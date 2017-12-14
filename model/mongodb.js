@@ -196,11 +196,12 @@ exports.saveIp = function (req) {
             let ipArr = await ipDB.find({ip}).toArray();
             //如果存在ip，更新时间
             if(ipArr.length){
-                await ipDB.update({ip},{$set:{time:_getNowFormatDate().time}});
+                let {time} = ipArr[0];
+                time.push(_getNowFormatDate().time);
+                await ipDB.update({ip},{$set:{time}});
                 await db.close();
                 return false;
             }
-
             let ipInfo = null
             let opt = {
                 host:'ip.taobao.com',
@@ -213,13 +214,13 @@ exports.saveIp = function (req) {
                     let _chunk = JSON.parse(chunk);
                     //没查到ip的信息
                     if(_chunk.code || _chunk.data.country==='内网ip'){
-                        await ipDB.insert({ip,time:_getNowFormatDate().time});
+                        await ipDB.insert({ip,time:[_getNowFormatDate().time]});
                         await db.close();
                         return false;
                     }
                     ipInfo = _chunk.data;
                     let {country,area,region,city,county,isp} = ipInfo
-                    await ipDB.insert({country,area,region,city,county,isp,ip,time:_getNowFormatDate().time});
+                    await ipDB.insert({country,area,region,city,county,isp,ip,time:[_getNowFormatDate().time]});
                     await db.close();
                 });
             });

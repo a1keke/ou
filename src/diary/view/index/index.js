@@ -14,6 +14,10 @@ export default class Index extends Component{
     constructor(props){
         super(props);
     }
+    componentDidMount(){
+        alert('appVersion:'+navigator.appVersion);
+        alert('platform:'+navigator.platform)
+    }
     render(){
         return (
           <div>
