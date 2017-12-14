@@ -4,7 +4,8 @@ let mongodb = require('./../model/mongodb.js');
 let file = require('./../model/file.js');
 //public
 exports.public = function (req,res,next) {
-    console.log(req.ip);
+    let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
+    console.log(ip);
     next();
 }
 
@@ -114,6 +115,4 @@ exports.getDiary = function (req,res) {
     mongodb.getDiary({title},result=>{
         res.json(result)
     })
-
-
 }
