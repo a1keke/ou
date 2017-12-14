@@ -183,11 +183,13 @@ exports.getDiary = function (args,cb) {
 
 
 
-//存ip
-exports.saveIp = function (req) {
+//存信息
+exports.saveBaseInfo = function (req,cb) {
     (
-        async(req)=>{
+        async(req,cb)=>{
             let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
+
+            let {appVersion,platform} = req.body;
 
             let db = await mongodbClient.connect(BASEINFO_URL);
 
@@ -196,10 +198,11 @@ exports.saveIp = function (req) {
             let ipArr = await ipDB.find({ip}).toArray();
             //如果存在ip，更新时间
             if(ipArr.length){
-                let {time} = ipArr[0];
-                time.push(_getNowFormatDate().time);
-                await ipDB.update({ip},{$set:{time}});
+                let {history} = ipArr[0];
+                history.push({time:_getNowFormatDate().time,appVersion,platform});
+                await ipDB.update({ip},{$set:{history}});
                 await db.close();
+                await cb({code:1})
                 return false;
             }
             let ipInfo = null
@@ -214,22 +217,25 @@ exports.saveIp = function (req) {
                     let _chunk = JSON.parse(chunk);
                     //没查到ip的信息
                     if(_chunk.code || _chunk.data.country==='内网ip'){
-                        await ipDB.insert({ip,time:[_getNowFormatDate().time]});
+                        await ipDB.insert({ip,history:[{time:_getNowFormatDate().time,appVersion,platform}]});
                         await db.close();
+                        await cb({code:1})
                         return false;
                     }
                     ipInfo = _chunk.data;
                     let {country,area,region,city,county,isp} = ipInfo
-                    await ipDB.insert({country,area,region,city,county,isp,ip,time:[_getNowFormatDate().time]});
+                    await ipDB.insert({country,area,region,city,county,isp,ip,history:[{time:_getNowFormatDate().time,appVersion,platform}]});
                     await db.close();
+                    await cb({code:1})
                 });
             });
             searchIp.on('error',e=>{
-                console.log('error:'+e);
+                db.close();
+                cb({code:0,err:e})
             })
             searchIp.end();
         }
-    )(req)
+    )(req,cb)
 
 }
 

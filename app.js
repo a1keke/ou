@@ -18,6 +18,7 @@ app.use('/jianshu', function(req, res) {
     res.render('jianshu/index', '');
 });
 //接口
+app.post('/base',router.baseInfo);
 app.use('/diary/getAllDiary',router.getAllDiary);
 app.post('/diary/saveDiary',router.saveDiary);
 app.post('/diary/upImages',upload.array('images'),router.upImages);
@@ -28,7 +29,7 @@ app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);
 app.get("/biquge/interface/getChapter",router.getChapter)
 app.get('/biquge/interface/getBookName',router.getBookNameBybid);
-app.use(router.public);
+
 // 页面
 //页面--日记
 app.use('/diary',(req,res)=>{

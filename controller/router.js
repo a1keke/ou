@@ -3,9 +3,10 @@
 let mongodb = require('./../model/mongodb.js');
 let file = require('./../model/file.js');
 //public
-exports.public = function (req,res,next) {
-    mongodb.saveIp(req);
-    next();
+exports.baseInfo = function (req,res) {
+    mongodb.saveBaseInfo(req,result=>{
+        res.json(result);
+    });
 }
 
 exports.showIndex = function (req,res) {
