@@ -16,6 +16,13 @@ import 'promise-polyfill';
 class App extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            isLogin:false
+        }
+    }
+
+    log(target,key,des){
+
     }
     componentDidMount(){
         let {appVersion,platform} = navigator;
@@ -26,10 +33,11 @@ class App extends Component{
             },
             body:JSON.stringify({appVersion,platform})
         }).then(res=>res.json()).then(res=>{
-            console.log(res);
+            console.log('base:'+res.code);
         }).catch(e=>{
-            console.log(e);
+            console.log('base:'+e);
         })
+
     }
     render(){
         return (
