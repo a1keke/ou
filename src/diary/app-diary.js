@@ -21,9 +21,6 @@ class App extends Component{
         }
     }
 
-    log(target,key,des){
-
-    }
     componentDidMount(){
         let {appVersion,platform} = navigator;
         fetch('/base',{
