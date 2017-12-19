@@ -9,24 +9,11 @@ import 'promise-polyfill';
 export default class DiaryList extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            diary :[]
-        }
     }
     
-    componentDidMount(){
-        fetch('/diary/getAllDiary').then(res=>{
-            return res.json();
-        }).then(res=>{
-            this.setState({diary:res.diary})
-        }).catch(res=>{
-            console.log(res);
-        })
-    }
-
     render(){
-        let {diary} = this.state;
-        let diaryCon = diary.map((ele,i)=>{
+        let {diaryList} = this.props;
+        let diaryCon = diaryList.map((ele,i)=>{
             return <Diary {...{diary:ele,isDetail:false,key:i}}/>
         })
 

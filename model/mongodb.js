@@ -148,7 +148,7 @@ exports.getAllDiary = function (cb) {
 
             await db.close();
 
-            await cb({diary:diaryArr.reverse()});
+            await cb({diaryList:diaryArr.reverse()});
 
         }
     )()

@@ -8,18 +8,31 @@ import ReactDOM from 'react-dom';
 import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
 
 import DiaryList from '../../components/diaryList/DiaryList.js';
+import {connect} from 'react-redux';
+import {fetchDiaryList} from './../../redux/action/Index.js';
 
-
-export default class Index extends Component{
+class index extends Component{
     constructor(props){
         super(props);
     }
+    componentDidMount(){
+        this.props.fetchDiaryList();
+    }
     render(){
+        let {diaryList} = this.props;
         return (
           <div>
-              <DiaryTextarea/>
-              <DiaryList/>
+              {/*<DiaryTextarea/>*/}
+              <DiaryList {...{diaryList}}/>
           </div>
         );
     }
 }
+const Index = connect(state=>{
+    return {diaryList:state.diaryList.diaryList}
+},dispatch=>{
+    return {
+        fetchDiaryList:()=>dispatch(fetchDiaryList())
+    }
+})(index);
+export default Index;
