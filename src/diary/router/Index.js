@@ -3,7 +3,7 @@ import {BrowserRouter,Route} from 'react-router-dom';
 import {fetchBaseInfo} from '../redux/action/Index.js';
 import {connect} from 'react-redux';
 import Header from '../components/header/Header.js';
-
+import Toast from '../components/toast/Toast.js';
 import Index from '../view/index/Index.js';
 
 import DetailDiary from '../view/detailDiary/DetailDiary.js';
@@ -21,10 +21,10 @@ class ApDiary extends Component{
         return (
             <BrowserRouter >
                 <div>
-                    {/*{isbase}*/}
-                    {/*<Route path="/diary" component={Header} />*/}
-                    {/*<Route path="/diary" exact component={Index}/>*/}
-                    {/*<Route path="/diary/:title" component={DetailDiary}/>*/}
+                    <Route path="/diary" component={Header} />
+                    <Route path='/diary' component={Toast} />
+                    <Route path="/diary" exact component={Index}/>
+                    <Route path="/diary/:title" component={DetailDiary}/>
                 </div>
             </BrowserRouter>
         );
@@ -33,7 +33,7 @@ class ApDiary extends Component{
 
 
 function mapStateToProps(state) {
-    let {isBase,isFetching} = state.root;
+    let {isBase,isFetching} = state.fetchReducer;
     return{isBase,isFetching}
 }
 function mapDispatchToProps(dispatch) {

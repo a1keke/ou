@@ -1,23 +1,21 @@
 import React,{Component} from 'react';
-
+import {connect} from 'react-redux';
+import {hideToast} from './../../redux/action/Index.js';
 import S from './style.scss';
 
-export default class Toast extends Component{
+class toast extends Component{
     constructor(props){
         super(props);
     }
     render(){
 
-        let {text,flag,changeToast,btnEvent} = this.props;
+        let {text,isHidden,hideToast,btnEvent} = this.props;
         
         return (
             <div
-                className={flag?
-                    'ui dimmer modals page transition visible active':
-                    'ui dimmer modals page transition'}
-                onClick={()=>{
-                    changeToast();
-                }}
+                className={isHidden?'ui dimmer modals page transition':
+                    'ui dimmer modals page transition visible active'}
+                onClick={hideToast}
                 >
                 <div className={`ui small test modal transition visible active ${S.fix}`}>
                     <div className={`header ${S.bbn}`}>Warning</div>
@@ -35,3 +33,15 @@ export default class Toast extends Component{
         );
     }
 }
+const Toast = connect(state=>{
+    return {
+        text:state.toastReducer.text,
+        isHidden:state.toastReducer.isHidden,
+        btnEvent:state.toastReducer.btnEvent
+    }
+},dispatch=>{
+    return {
+        hideToast:()=>dispatch(hideToast)
+    }
+})(toast);
+export default Toast;

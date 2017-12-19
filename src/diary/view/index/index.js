@@ -22,14 +22,14 @@ class index extends Component{
         let {diaryList} = this.props;
         return (
           <div>
-              {/*<DiaryTextarea/>*/}
+              <DiaryTextarea/>
               <DiaryList {...{diaryList}}/>
           </div>
         );
     }
 }
 const Index = connect(state=>{
-    return {diaryList:state.diaryList.diaryList}
+    return {diaryList:state.fetchReducer.diaryList}
 },dispatch=>{
     return {
         fetchDiaryList:()=>dispatch(fetchDiaryList())

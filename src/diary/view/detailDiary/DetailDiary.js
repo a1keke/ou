@@ -24,7 +24,7 @@ class detailDiary extends Component{
     }
 }
 const DetailDiary = connect(state=>{
-    let {diary,status} = state.detailDiary
+    let {diary,status} = state.fetchReducer
     return {diary,status}
 },dispatch=>{
     return {

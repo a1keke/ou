@@ -2,26 +2,23 @@
 import React,{Component} from 'react';
 
 import Toast from './../toast/Toast.js';
-
+import {showToast} from './../../redux/action/Index.js';
+import {connect} from 'react-redux';
 import S from './style.scss';
 import 'whatwg-fetch';
 import 'promise-polyfill';
-export default class DiaryTextarea extends Component{
+class diaryTextarea extends Component{
     constructor(props){
         super(props);
         this.state = {
             title:'',
             content:'',
-            toastFlag:false,
-            toastMsg:'1',
             images:[],
-            imagesValue:'',
-            btnEvent:null
+            imagesValue:''
         }
         this.changeTitle = this.changeTitle.bind(this);
         this.changeContent = this.changeContent.bind(this);
         this.saveDairy = this.saveDairy.bind(this);
-        this.changeToast = this.changeToast.bind(this);
         this.tabEvent = this.tabEvent.bind(this);
         this.fomartContent = this.fomartContent.bind(this);
         this.hasTab = this.hasTab.bind(this);
@@ -36,7 +33,7 @@ export default class DiaryTextarea extends Component{
     changeContent(ev){this.setState({content:ev.target.value})};
 //图片上传
     changeImage(ev){
-        let {changeToast} = this;
+        let {showToast} = this.props;
         let {imagesForm} = this.refs;
         let {images,content} = this.state;
 
@@ -49,7 +46,7 @@ export default class DiaryTextarea extends Component{
             return res.json();
         }).then(res=>{
             if(res.code===0){
-                changeToast('上传失败，请不要上传非法的类型');
+                showToast('上传失败，请不要上传非法的类型');
                 return false;
             }
             let num = images.length;
@@ -74,10 +71,10 @@ export default class DiaryTextarea extends Component{
             body:JSON.stringify({name,key,url})
         }).then(res=>res.json()).then(res=>{
             if(res.code===0){
-                let {changeToast} = this;
+                let {showToast} = this.props;
                 console.log('deleteImage fail,result is' + res.err);
                 setTimeout(()=>{
-                    changeToast('删除失败，请稍后再试');
+                    showToast('删除失败，请稍后再试');
                 },300);
                 return false;
             }
@@ -132,12 +129,12 @@ export default class DiaryTextarea extends Component{
 //提交diary
     saveDairy(){
 
-        let {changeToast,fomartContent} = this;
-
+        let {fomartContent} = this;
+        let {showToast} = this.props;
         let {title,content} = this.state;
 
         if(title==='' || content ===''){
-            changeToast('标题或者内容均不能为空');
+            showToast('标题或者内容均不能为空');
             return false;
         }
 
@@ -155,10 +152,10 @@ export default class DiaryTextarea extends Component{
             return res.json();
         }).then(res=>{
             let {code} = res;
-            code === 1? changeToast('保存成功，请刷新本页'):changeToast('保存失败');
+            code === 1? showToast('保存成功，请刷新本页'):showToast('保存失败');
 
         }).catch(res=>{
-            changeToast('保存失败');
+            showToast('保存失败');
         })
 
     }
@@ -271,26 +268,12 @@ export default class DiaryTextarea extends Component{
 
     }
 
-    changeToast(msg,cb){
-        let toastMsg = '';
-        let btnEvent = null;
-        if(msg){
-            toastMsg = msg;
-        }
-        if(cb){
-            btnEvent = cb;
-        }
-        let {toastFlag} = this.state;
-
-        this.setState({toastMsg,toastFlag:!toastFlag,btnEvent});
-
-    }
     render(){
+        let {changeTitle,changeContent,saveDairy,tabEvent,changeImage,deleteImage} = this;
 
-        let {changeTitle,changeContent,saveDairy,changeToast,tabEvent,changeImage,deleteImage} = this;
+        let {title,content,imagesValue,images} = this.state;
 
-        let {title,content,imagesValue,toastMsg,toastFlag,images,btnEvent} = this.state;
-
+        let {showToast} = this.props;
         let imagesArr = images.length?(
             <div className={`ui tiny images ${S.images}`}>
                 {
@@ -301,7 +284,7 @@ export default class DiaryTextarea extends Component{
                                  src={url}
                                  key={i}
                                  title={`图片${i+1},点击删除`}
-                                 onClick={()=>changeToast('是否确定要删除这张图片？',()=>{
+                                 onClick={()=>showToast('是否确定要删除这张图片？',()=>{
                                      deleteImage(name,key,url)
                                  })}
                             />
@@ -332,9 +315,14 @@ export default class DiaryTextarea extends Component{
                         <i className='large image icon' title="up Images"></i>
                     </div>
                 </form>
-                <Toast {...{text:toastMsg,flag:toastFlag,changeToast,btnEvent}}/>
                 {imagesArr}
             </div>
         );
     }
 }
+const DiaryTextarea = connect(state=>{return{}},dispatch=>{
+    return {
+        showToast:(text,btnEvent)=>dispatch(showToast(text,btnEvent))
+    }
+})(diaryTextarea);
+export default DiaryTextarea;

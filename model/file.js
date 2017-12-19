@@ -44,7 +44,7 @@ exports.deleteImage = function (args,cb) {
         return false;
     }
 
-    fs.unlink(url,err=>{
+    fs.unlink(path.resolve(__dirname,'./../')+url,err=>{
         err?cb({code:0,err:'delete err'}):cb({code:1});
     })
 }
