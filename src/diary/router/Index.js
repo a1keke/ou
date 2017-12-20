@@ -17,7 +17,6 @@ class ApDiary extends Component{
         this.props.fetchBaseInfo({appVersion,platform});
     }
     render(){
-        let {isbase} = this.props;
         return (
             <BrowserRouter >
                 <div>

@@ -18,8 +18,12 @@ class index extends Component{
     componentDidMount(){
         this.props.fetchDiaryList();
     }
+    componentWillUnmount(){
+        console.log('unmount');
+    }
     render(){
         let {diaryList} = this.props;
+        console.log(diaryList);
         return (
           <div>
               <DiaryTextarea/>
