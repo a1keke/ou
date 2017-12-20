@@ -1,4 +1,5 @@
 import * as action from '../action/Index.js';
+import objectAssign from 'object-assign';
 //全局状态
 const defaultState = {
     isbase:false,//是否已经发送基本信息
@@ -13,11 +14,11 @@ const defaultState = {
 export const fetchReducer = (state=defaultState,action)=>{
     switch (action.type){
         case 'FETCH_SUCCESS':
-            return Object.assign({},state,action.res);
+            return objectAssign({},state,action.res);
         case 'FETCH_FAIL':
-            return Object.assign({},state,action.res);
+            return objectAssign({},state,action.res);
         case 'FETCH_ERROR':
-            return Object.assign({},state,{e:action.e})
+            return objectAssign({},state,{e:action.e})
         default:
             return state
     }
@@ -31,9 +32,9 @@ const toastState = {
 export const toastReducer = (state=toastState,action)=>{
     switch (action.type){
         case 'SHOW_TOAST':
-            return Object.assign({},state,{text:action.text,isHidden:false,btnEvent:action.btnEvent});
+            return objectAssign({},state,{text:action.text,isHidden:false,btnEvent:action.btnEvent});
         case 'HIDE_TOAST':
-            return Object.assign({},state,{text:'',isHidden:true,btnEvent:null});
+            return objectAssign({},state,{text:'',isHidden:true,btnEvent:null});
         default:
             return state
     }

@@ -1,12 +1,6 @@
-
-
 import React,{Component} from 'react';
-
 import ReactDOM from 'react-dom';
-
-
 import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
-
 import DiaryList from '../../components/diaryList/DiaryList.js';
 import {connect} from 'react-redux';
 import {fetchDiaryList} from './../../redux/action/Index.js';
@@ -14,16 +8,21 @@ import {fetchDiaryList} from './../../redux/action/Index.js';
 class index extends Component{
     constructor(props){
         super(props);
+
     }
     componentDidMount(){
         this.props.fetchDiaryList();
     }
+    shouldComponentUpdate(nextProps,nextState){
+        console.log(`nextProps:${nextProps.toString()}`);
+        console.log(`nextState:${nextState}`);
+        return true
+
+    }
     componentWillUnmount(){
-        console.log('unmount');
     }
     render(){
         let {diaryList} = this.props;
-        console.log(diaryList);
         return (
           <div>
               <DiaryTextarea/>
