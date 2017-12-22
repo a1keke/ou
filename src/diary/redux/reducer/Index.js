@@ -34,7 +34,7 @@ export const toastReducer = (state=toastState,action)=>{
         case 'SHOW_TOAST':
             return objectAssign({},state,{text:action.text,isHidden:false,btnEvent:action.btnEvent});
         case 'HIDE_TOAST':
-            return objectAssign({},state,{text:'',isHidden:true,btnEvent:null});
+            return objectAssign({},state,{isHidden:true});
         default:
             return state
     }

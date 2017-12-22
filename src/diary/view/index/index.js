@@ -14,14 +14,8 @@ class index extends Component{
         this.props.fetchDiaryList();
     }
     shouldComponentUpdate(nextProps,nextState){
-        // console.log(`nextProps:${nextProps.toString()}`);
-        // console.log(`nextState:${nextState}`);
-        console.log(nextProps===this.props.diaryList);
-        console.log(this.props.diaryList);
-        return true
+        return !(JSON.stringify(nextProps.diaryList)===JSON.stringify(this.props.diaryList))
 
-    }
-    componentWillUnmount(){
     }
     render(){
         let {diaryList} = this.props;

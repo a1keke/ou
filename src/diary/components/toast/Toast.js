@@ -10,7 +10,6 @@ class toast extends Component{
     render(){
 
         let {text,isHidden,hideToast,btnEvent} = this.props;
-        
         return (
             <div
                 className={isHidden?'ui dimmer modals page transition':
