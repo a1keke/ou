@@ -1,5 +1,6 @@
 //action
 //发送fetch的action
+let  clientCrypto = require('../../../../util/_crypto.client.js');
 const FETCH_SUCCESS = res =>{
     return {
         type:'FETCH_SUCCESS',
@@ -58,14 +59,36 @@ export const fetchDetailDiary = diaryTitle=>{
 export const fetchDiaryList = ()=>{
     return dispatch =>{
         return fetch('/diary/getAllDiary')
-            .then(res=>res.json())
-            .then(res=>{
-            return dispatch(FETCH_SUCCESS({diaryList:res.diaryList}));
-        }).catch(e=>{
-            return dispatch(FETCH_ERROR(e));
-        })
+            .then(res => res.json())
+            .then(res => dispatch(FETCH_SUCCESS({diaryList:res.diaryList})))
+            .catch(e => dispatch(FETCH_ERROR(e)))
     }
 }
+
+// 注册的action
+
+export const fetchSignUp = info=>{
+    return dispatch =>{
+        return fetch('/diary/signUp',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({info:clientCrypto.pubEncrypt(JSON.stringify(info))})
+        }).then(res => res.json())
+            .then(res => {
+                if(!res.code){
+                    dispatch(showToast(res.err));
+                }else {
+                    dispatch(FETCH_SUCCESS({isLogin:true}))
+                }
+            })
+            .catch(e => dispatch(FETCH_ERROR(e)))
+    }
+}
+
+
+
 // 更改弹框状态的action
 export const showToast = (text,btnEvent)=>{
     return {

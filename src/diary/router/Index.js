@@ -1,11 +1,12 @@
 import React,{Component} from 'react';
 import {BrowserRouter,Route} from 'react-router-dom';
-import {fetchBaseInfo} from '../redux/action/Index.js';
+import {fetchBaseInfo} from '../redux/action/index.js';
 import {connect} from 'react-redux';
 import Header from '../components/header/Header.js';
 import Toast from '../components/toast/Toast.js';
+import Login from '../components/login/Login.js';
+import SignUp from '../components/signUp/SignUp.js';
 import Index from '../view/index/Index.js';
-
 import DetailDiary from '../view/detailDiary/DetailDiary.js';
 class ApDiary extends Component{
     constructor(props){
@@ -21,9 +22,11 @@ class ApDiary extends Component{
             <BrowserRouter >
                 <div>
                     <Route path="/diary" component={Header} />
-                    <Route path='/diary' component={Toast} />
+                    <Route path="/diary" component={Toast} />
                     <Route path="/diary" exact component={Index}/>
-                    <Route path="/diary/:title" component={DetailDiary}/>
+                    <Route path="/diary/user/login" component={Login} />
+                    <Route path="/diary/user/signup" component={SignUp} />
+                    <Route path="/diary/:title" exact component={DetailDiary}/>
                 </div>
             </BrowserRouter>
         );

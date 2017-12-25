@@ -1,7 +1,7 @@
 
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchDetailDiary} from './../../redux/action/Index.js';
+import {fetchDetailDiary} from '../../redux/action/index.js';
 import DiarySingle  from './../../components/diarySingle/DiarySingle.js';
 
 class detailDiary extends Component{

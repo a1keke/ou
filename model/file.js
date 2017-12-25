@@ -1,10 +1,8 @@
 
 let fs = require('fs');
-// let formidable = require('formidable');
 let path = require('path');
 let uuid = require('uuid');
-let crypto = require('crypto');
-const SECRET_KEY = 'qianke';
+let serverCrypto = require('./../util/_crypto.server.js')
 const MIMES = 'image/jpeg,image/png,image/bmp'
 exports.upImages = function (req,cb) {
 
@@ -24,7 +22,7 @@ exports.upImages = function (req,cb) {
 
     files.map((ele,i)=>{
         let {mimetype,filename,path} = ele;
-        let key = _encrypt(filename);
+        let key = serverCrypto.priEncrypt(filename);
         let mime = _getMIME(mimetype);
         let _path = path+mime;
         fs.renameSync(path,path+mime);
@@ -39,7 +37,7 @@ exports.deleteImage = function (args,cb) {
 
     let {name,key,url} = args;
 
-    if(!key || name !== _decrypt(key)){
+    if(!key || name !== serverCrypto.priDecrypt(key)){
         cb({code:0,err:'key error'});
         return false;
     }
@@ -64,20 +62,4 @@ function _getMIME(type) {
             break;
     }
     return MIME;
-}
-
-function _encrypt(str) {
-    let enc = '';
-    let cipher = crypto.createCipher('aes192', SECRET_KEY);
-    enc += cipher.update(str, 'utf8', 'hex');
-    enc += cipher.final('hex');
-    return enc;
-}
-
-function _decrypt(str) {
-    let dec = '';
-    let decipher = crypto.createDecipher('aes192', SECRET_KEY);
-    dec += decipher.update(str, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
 }

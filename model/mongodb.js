@@ -239,7 +239,10 @@ exports.saveBaseInfo = function (req,cb) {
 
 }
 
+//注册账号
+exports.saveSignUpInfo = function (req,cb) {
 
+}
 
 
 //根据传入的bookid查找书名

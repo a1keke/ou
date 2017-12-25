@@ -2,7 +2,7 @@
 import React,{Component} from 'react';
 
 import Toast from './../toast/Toast.js';
-import {showToast} from './../../redux/action/Index.js';
+import {showToast} from '../../redux/action/index.js';
 import {connect} from 'react-redux';
 import S from './style.scss';
 import 'whatwg-fetch';

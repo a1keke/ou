@@ -16,7 +16,7 @@ import 'whatwg-fetch';
 
 import 'promise-polyfill';
 
-import * as reducer from './redux/reducer/Index.js';
+import * as reducer from './redux/reducer/index.js';
 const store =  createStore(combineReducers(reducer),applyMiddleware(thunk));
 store.subscribe(() => { //监听state变化
     // console.log(store.getState())

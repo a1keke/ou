@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
-import {hideToast} from './../../redux/action/Index.js';
+import {hideToast} from '../../redux/action/index.js';
 import S from './style.scss';
 
 class toast extends Component{

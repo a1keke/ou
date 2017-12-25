@@ -1,9 +1,8 @@
 import React,{Component} from 'react';
-import ReactDOM from 'react-dom';
 import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
 import DiaryList from '../../components/diaryList/DiaryList.js';
 import {connect} from 'react-redux';
-import {fetchDiaryList} from './../../redux/action/Index.js';
+import {fetchDiaryList} from '../../redux/action/index.js';
 
 class index extends Component{
     constructor(props){
