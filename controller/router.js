@@ -72,7 +72,6 @@ exports.getDiary = function (req,res) {
     })
 }
 exports.signUp = function (req,res) {
-
     let {info} = req.body;
     if(!info){
         res.json({code:0,err:'提交信息异常，请重新提交'})
@@ -84,7 +83,7 @@ exports.signUp = function (req,res) {
         res.json({code:0,err:'提交信息异常，请重新提交'})
         return false;
     }
-    let {nickname,account,password,email} = info;
+    let {nickname,account,password,email,appVersion,platform} = info;
 
     if(!nickname || !account || !password || !email){
         res.json({code:0,err:'请完成所有必填项'})
@@ -98,7 +97,11 @@ exports.signUp = function (req,res) {
         res.json({code:0,err:'格式错误，请更正'})
         return false;
     }
-    mongodb.saveSignUpInfo({nickname,account,password,email},)
-    res.json({code:1})
+    let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
+    mongodb.saveSignUpInfo({ip,nickname,account,password,email,appVersion,platform},result=>{
+        req.session.nickname = nickname;
+        req.session.account = account;
+        res.json(result);
+    })
 
 }

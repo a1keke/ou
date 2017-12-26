@@ -27,9 +27,15 @@ export const fetchBaseInfo = postData=>{
             headers:{
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body:JSON.stringify(postData)
         }).then(res=>res.json()).then(res=>{
-            return dispatch(FETCH_SUCCESS({isbase:true}));
+            return dispatch(FETCH_SUCCESS({
+                isbase:true,
+                isLogin:res.nickname?true:false,
+                nickname:res.nickname,
+                account:res.account
+            }));
         }).catch(e=>{
             return dispatch(FETCH_ERROR(e))
         })
@@ -43,6 +49,7 @@ export const fetchDetailDiary = diaryTitle=>{
             headers:{
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body:JSON.stringify({title:diaryTitle})
         }).then(res=>res.json()).then(res=>{
             if(res.code){
@@ -72,15 +79,24 @@ export const fetchSignUp = info=>{
         return fetch('/diary/signUp',{
             method:'POST',
             headers:{
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
+            credentials: 'same-origin',
             body:JSON.stringify({info:clientCrypto.pubEncrypt(JSON.stringify(info))})
         }).then(res => res.json())
             .then(res => {
                 if(!res.code){
                     dispatch(showToast(res.err));
                 }else {
-                    dispatch(FETCH_SUCCESS({isLogin:true}))
+                    localStorage.setItem('isLogin',true);
+                    localStorage.setItem('account',info.nickname);
+                    localStorage.setItem('isLogin',info.account);
+                    dispatch(showToast('注册成功，已经为你自动登录'));
+                    dispatch(FETCH_SUCCESS({
+                        isLogin:true,
+                        nickname:info.nickname,
+                        account:info.account,
+                    }))
                 }
             })
             .catch(e => dispatch(FETCH_ERROR(e)))

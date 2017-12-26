@@ -8,16 +8,16 @@ class header extends Component{
         super(props);
     }
     shouldComponentUpdate(nextProps,nextState){
-        return !(JSON.stringify(nextProps.isLogin)===JSON.stringify(this.props.isLogin)&&JSON.stringify(nextProps.username)===JSON.stringify(this.props.username))
+        return !(JSON.stringify(nextProps.isLogin)===JSON.stringify(this.props.isLogin)&&JSON.stringify(nextProps.nickname)===JSON.stringify(this.props.nickname))
 
     }
     render(){
-        let {isLogin,username} = this.props;
+        let {isLogin,nickname} = this.props;
         return (
             <h2 className={`ui center aligned icon header ${S.mt}`}>
                 <i className={`circular icon ${S.header}`}></i>
                 <p className={`${S.tac}`}>
-                    <span className={username?S.mr1:''}>{username}</span>
+                    <span className={nickname?S.mr1:''}>{nickname}</span>
                     <Link to="/diary/user/login">
                         <i
                             className={`circular sign in icon ${isLogin?'':'inverted blue'} large link `}
@@ -31,7 +31,8 @@ class header extends Component{
 }
 const Header = connect(state=>{
     return {
-        isLogin:state.fetchReducer.isLogin
+        isLogin:state.fetchReducer.isLogin,
+        nickname:state.fetchReducer.nickname
     }
 })(header)
 export default Header;

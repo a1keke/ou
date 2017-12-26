@@ -8,7 +8,9 @@ const fetchState = {
     diary :null,//单篇日记
     status:1,//页面状态1正常，0异常
     diaryList:[],//所有日记,
-    isLogin:localStorage.getItem('isLogin')?localStorage.getItem('isLogin'):false
+    isLogin:localStorage.getItem('isLogin')?localStorage.getItem('isLogin'):false,
+    nickname:localStorage.getItem('nickname')?localStorage.getItem('nickname'):'',
+    account:localStorage.getItem('account')?localStorage.getItem('account'):'',
 }
 //fetch的reducer模板
 //target 名称

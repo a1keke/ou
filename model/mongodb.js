@@ -54,13 +54,10 @@ exports.getChaptersByBid = function (req,cb) {
         })
     })
 }
-
 exports.getChapter = function (req,cb) {
     let index,chaptername,chaptercontent;
-
     let bid = req.query.bid;
     let cid = req.query.cid*1;
-
     mongodbClient.connect(BQG_URL,(err,db)=>{
         if(err){
             console.log(err);
@@ -81,7 +78,6 @@ exports.getChapter = function (req,cb) {
                 return false;
             })
     })
-
 }
 
 exports.getBookNameBybid = function (req,cb) {
@@ -98,31 +94,19 @@ exports.saveDiary = function (args,cb) {
     (
         async ()=>{
             let {title,content} = args;
-
             let {time,week} = _getNowFormatDate();
-
             let index = await _getDiaryLength();
-
             let db = await mongodbClient.connect(DIARY_URL);
-
             let diaryDB = await db.collection('diary');
-
             try{
                 await diaryDB.insert({index:index+1,time,week,title,content});
-
                 await db.close();
-
                 await cb({code:1});
-
             }catch (e){
                 await cb({code:0})
             }
-
-
-
         }
     )()
-
 }
 // 取出所有日记
 exports.getAllDiary = function (cb) {
@@ -179,22 +163,17 @@ exports.getDiary = function (args,cb) {
         }
     )(args,cb)
 }
-
-
-
-
 //存信息
 exports.saveBaseInfo = function (req,cb) {
     (
         async(req,cb)=>{
             let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
-
             let {appVersion,platform} = req.body;
-
+            console.log(req.session);
+            let nickname = req.session.nickname?req.session.nickname:'';
+            let account = req.session.account?req.session.account:'';
             let db = await mongodbClient.connect(BASEINFO_URL);
-
             let ipDB = await db.collection('ip');
-
             let ipArr = await ipDB.find({ip}).toArray();
             //如果存在ip，更新时间
             if(ipArr.length){
@@ -202,7 +181,7 @@ exports.saveBaseInfo = function (req,cb) {
                 history.push({time:_getNowFormatDate().time,appVersion,platform});
                 await ipDB.update({ip},{$set:{history}});
                 await db.close();
-                await cb({code:1})
+                await cb({code:1,nickname,account})
                 return false;
             }
             let ipInfo = null
@@ -219,29 +198,95 @@ exports.saveBaseInfo = function (req,cb) {
                     if(_chunk.code || _chunk.data.country==='内网ip'){
                         await ipDB.insert({ip,history:[{time:_getNowFormatDate().time,appVersion,platform}]});
                         await db.close();
-                        await cb({code:1})
+                        await cb({code:1,nickname,account})
                         return false;
                     }
                     ipInfo = _chunk.data;
                     let {country,area,region,city,county,isp} = ipInfo
                     await ipDB.insert({country,area,region,city,county,isp,ip,history:[{time:_getNowFormatDate().time,appVersion,platform}]});
                     await db.close();
+                    await cb({code:1,nickname,account})
+                });
+            });
+            searchIp.on('error',e=>{
+                db.close();
+                cb({code:0,err:e,nickname,account})
+            })
+            searchIp.end();
+        }
+    )(req,cb)
+}
+
+//注册账号
+exports.saveSignUpInfo = function (info,cb) {
+    let {ip,nickname,account,password,email,appVersion,platform} = info;
+    (
+        async ()=>{
+            let db = await mongodbClient.connect(DIARY_URL);
+            let userInfoDB = await db.collection('userInfo');
+            // 检查是否存在同名
+            let nicknameRes = await userInfoDB.find({nickname}).toArray();
+            if(nicknameRes.length){
+                cb({code:0,err:'该昵称已存在，请换个昵称'});
+                await db.close();
+                return false;
+            }
+            let accountRes = await userInfoDB.find({account}).toArray();
+            if(accountRes.length){
+                cb({code:0,err:'该账户已存在，请换个账户'});
+                await db.close();
+                return false;
+            }
+            //存入ip信息
+            let ipInfo = null
+            let opt = {
+                host:'ip.taobao.com',
+                method:'GET',
+                path:'/service/getIpInfo.php?ip='+ip,
+            };
+            let searchIp = await http.request(opt,res=>{
+                res.setEncoding('utf8');
+                res.on('data',async chunk=>{
+                    let _chunk = JSON.parse(chunk);
+                    //没查到ip的信息
+                    if(_chunk.code || _chunk.data.country==='内网ip'){
+                        await userInfoDB.insert({
+                            nickname,
+                            account,
+                            password,
+                            email,
+                            appVersion,
+                            platform,
+                            time:_getNowFormatDate().time,
+                            ipInfo:{ip}
+                        });
+                        await db.close();
+                        await cb({code:1})
+                        return false;
+                    }
+                    ipInfo = _chunk.data;
+                    let {country,area,region,city,county,isp} = ipInfo
+                    await userInfoDB.insert({
+                        nickname,
+                        account,
+                        password,
+                        email,
+                        appVersion,
+                        platform,
+                        time:_getNowFormatDate().time,
+                        ipInfo:{ip,country,area,region,city,county,isp}
+                    });
+                    await db.close();
                     await cb({code:1})
                 });
             });
             searchIp.on('error',e=>{
                 db.close();
-                cb({code:0,err:e})
+                cb({code:0,err:'网络异常，请稍后再试'})
             })
             searchIp.end();
         }
-    )(req,cb)
-
-}
-
-//注册账号
-exports.saveSignUpInfo = function (req,cb) {
-
+    )()
 }
 
 

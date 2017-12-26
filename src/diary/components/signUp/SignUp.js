@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import S from './style.scss';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 import {fetchSignUp,showToast} from './../../redux/action/index.js';
 let  validator = require('../../../../util/validator.js').validator;
 class signUp extends Component{
@@ -70,6 +71,7 @@ class signUp extends Component{
     submitSignUp(){
         let {nickname,nicknameErr,account,accountErr,password,passwordErr,confirm,confirmErr,email,emailErr} = this.state;
         let {showToast,fetchSignUp} = this.props;
+        let {appVersion,platform} = navigator;
         if(nicknameErr&&accountErr&&passwordErr&&confirmErr&&emailErr){
             showToast('格式错误，请更正')
             return false;
@@ -78,9 +80,13 @@ class signUp extends Component{
             showToast('请完成所有必填项')
             return false;
         }
-        fetchSignUp({nickname,account,password,email});
+        fetchSignUp({nickname,account,password,email,appVersion,platform});
     }
     render(){
+        let {isLogin} = this.props;
+        if(isLogin){
+            return (<Redirect to="/diary" />)
+        }
         let {nicknameChange,accountChange,passwordChange,confirmChange,emailChange,submitSignUp} = this;
         let {nickname,nicknameErr,account,accountErr,password,passwordErr,confirm,confirmErr,email,emailErr} = this.state;
         return (
@@ -169,7 +175,11 @@ class signUp extends Component{
         );
     }
 }
-const SignUp = connect(state=>state,dispatch=>{
+const SignUp = connect(state=>{
+    return {
+        isLogin:state.fetchReducer.isLogin
+    }
+},dispatch=>{
     return {
         fetchSignUp:info=>{dispatch(fetchSignUp(info))},
         showToast:(text,btnEvent)=>dispatch(showToast(text,btnEvent))
