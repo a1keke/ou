@@ -22,7 +22,7 @@ const FETCH_ERROR = e =>{
 //发送基本信息的action
 export const fetchBaseInfo = postData=>{
     return dispatch =>{
-        return fetch('/base',{
+        return fetch('/diary/base',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json'
@@ -30,9 +30,16 @@ export const fetchBaseInfo = postData=>{
             credentials: 'same-origin',
             body:JSON.stringify(postData)
         }).then(res=>res.json()).then(res=>{
-            return dispatch(FETCH_SUCCESS({
+            let nickname = localStorage.getItem('nickname');
+            let account = localStorage.getItem('account');
+            if(nickname && account && (nickname!=res.nickname || account!=res.account)){
+                dispatch(showToast('登录状态异常，请重新登录'));
+                dispatch(fetchLogout());
+                dispatch(FETCH_SUCCESS({isbase:true}))
+                return false;
+            }
+            dispatch(FETCH_SUCCESS({
                 isbase:true,
-                isLogin:res.nickname?true:false,
                 nickname:res.nickname,
                 account:res.account
             }));
@@ -53,9 +60,9 @@ export const fetchDetailDiary = diaryTitle=>{
             body:JSON.stringify({title:diaryTitle})
         }).then(res=>res.json()).then(res=>{
             if(res.code){
-                return dispatch(FETCH_SUCCESS({diary:res.diary}));
+                dispatch(FETCH_SUCCESS({diary:res.diary}));
             }else{
-                return dispatch(FETCH_FAIL({status:0}));
+                dispatch(FETCH_FAIL({status:0}));
             }
         }).catch(e=>{
             return dispatch(FETCH_ERROR(e));
@@ -65,7 +72,9 @@ export const fetchDetailDiary = diaryTitle=>{
 // 获取diary列表的action
 export const fetchDiaryList = ()=>{
     return dispatch =>{
-        return fetch('/diary/getAllDiary')
+        return fetch('/diary/getAllDiary',{
+            credentials: 'same-origin'
+        })
             .then(res => res.json())
             .then(res => dispatch(FETCH_SUCCESS({diaryList:res.diaryList})))
             .catch(e => dispatch(FETCH_ERROR(e)))
@@ -73,7 +82,6 @@ export const fetchDiaryList = ()=>{
 }
 
 // 注册的action
-
 export const fetchSignUp = info=>{
     return dispatch =>{
         return fetch('/diary/signUp',{
@@ -88,12 +96,10 @@ export const fetchSignUp = info=>{
                 if(!res.code){
                     dispatch(showToast(res.err));
                 }else {
-                    localStorage.setItem('isLogin',true);
-                    localStorage.setItem('account',info.nickname);
-                    localStorage.setItem('isLogin',info.account);
+                    localStorage.setItem('nickname',info.nickname);
+                    localStorage.setItem('account',info.account);
                     dispatch(showToast('注册成功，已经为你自动登录'));
                     dispatch(FETCH_SUCCESS({
-                        isLogin:true,
                         nickname:info.nickname,
                         account:info.account,
                     }))
@@ -102,7 +108,46 @@ export const fetchSignUp = info=>{
             .catch(e => dispatch(FETCH_ERROR(e)))
     }
 }
-
+// 登录的action
+export const fetchLogin = (info)=>{
+    return dispatch=>{
+        return fetch('/diary/login',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body:JSON.stringify({info:clientCrypto.pubEncrypt(JSON.stringify(info))})
+        }).then(res=>res.json()).then(res=>{
+            if(!res.code){
+                dispatch(showToast(res.err))
+            }else {
+                localStorage.setItem('nickname',res.nickname);
+                localStorage.setItem('account',res.account);
+                dispatch(showToast('登录成功'));
+                dispatch(FETCH_SUCCESS({
+                    nickname:res.nickname,
+                    account:res.account,
+                }))
+            }
+        })
+    }
+}
+//退出登录的action
+export const fetchLogout = ()=>{
+    return dispatch=>{
+        return fetch('/diary/logout',{
+            method:'POST',
+            credentials: 'same-origin',
+        }).then(res=>res.json()).then(res=>{
+            localStorage.clear();
+            dispatch(FETCH_SUCCESS({
+                nickname:'',
+                account:'',
+            }))
+        })
+    }
+}
 
 
 // 更改弹框状态的action

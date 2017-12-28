@@ -93,85 +93,76 @@ exports.getBookNameBybid = function (req,cb) {
 exports.saveDiary = function (args,cb) {
     (
         async ()=>{
-            let {title,content} = args;
+            let {title,content,nickname} = args;
             let {time,week} = _getNowFormatDate();
             let index = await _getDiaryLength();
             let db = await mongodbClient.connect(DIARY_URL);
             let diaryDB = await db.collection('diary');
             try{
-                await diaryDB.insert({index:index+1,time,week,title,content});
+                await diaryDB.insert({index:index+1,nickname,time,week,title,content});
                 await db.close();
                 await cb({code:1});
             }catch (e){
-                await cb({code:0})
+                await cb({code:0,err:'保存失败'})
             }
         }
     )()
 }
 // 取出所有日记
 exports.getAllDiary = function (cb) {
-
     (
         async()=>{
             let db = await mongodbClient.connect(DIARY_URL);
-
             let diary = await db.collection('diary');
-
             let diaryArr = await diary.find({}).toArray();
-
-
             diaryArr = diaryArr.map((ele,i)=>{
                return {
                    index:ele.index,
                    time:ele.time,
                    week:ele.week,
                    title:ele.title,
-                   content:ele.content
+                   content:ele.content,
+                   nickname:ele.nickname
                }
             });
-
             await db.close();
-
             await cb({diaryList:diaryArr.reverse()});
-
         }
     )()
-
 }
 // 取出一篇日记
 exports.getDiary = function (args,cb) {
     (
         async(args,cb)=>{
             let {title} = args;
-
             let db = await mongodbClient.connect(DIARY_URL);
-
             let diaryDB = await db.collection('diary');
-
             try{
-
                 let diary = await diaryDB.find({title}).toArray();
                 await db.close();
-
-                diary.length?cb({code:1,diary:diary[0]}):cb({code:0,err:'cant find'});
-
+                diary.length?cb({
+                    code:1,
+                    diary:{
+                        index:diary[0].index,
+                        time:diary[0].time,
+                        week:diary[0].week,
+                        title:diary[0].title,
+                        content:diary[0].content,
+                        nickname:diary[0].nickname
+                    }
+                }):cb({code:0,err:'cant find'});
             }catch (e){
                 await db.close();
                 await cb({code:0,err:e})
             }
-
         }
     )(args,cb)
 }
 //存信息
-exports.saveBaseInfo = function (req,cb) {
+exports.saveBaseInfo = function (req,info,cb) {
     (
         async(req,cb)=>{
-            let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
-            let {appVersion,platform} = req.body;
-            console.log(req.session);
-            let nickname = req.session.nickname?req.session.nickname:'';
-            let account = req.session.account?req.session.account:'';
+            let {ip,appVersion,platform,nickname,account} = info;
             let db = await mongodbClient.connect(BASEINFO_URL);
             let ipDB = await db.collection('ip');
             let ipArr = await ipDB.find({ip}).toArray();
@@ -218,7 +209,7 @@ exports.saveBaseInfo = function (req,cb) {
 }
 
 //注册账号
-exports.saveSignUpInfo = function (info,cb) {
+exports.saveSignUpInfo = function (req,info,cb) {
     let {ip,nickname,account,password,email,appVersion,platform} = info;
     (
         async ()=>{
@@ -261,7 +252,11 @@ exports.saveSignUpInfo = function (info,cb) {
                             ipInfo:{ip}
                         });
                         await db.close();
-                        await cb({code:1})
+                        req.session.regenerate(async err=>{
+                            req.session.nickname = nickname;
+                            req.session.account = account;
+                            await cb({code:1})
+                        });
                         return false;
                     }
                     ipInfo = _chunk.data;
@@ -277,7 +272,11 @@ exports.saveSignUpInfo = function (info,cb) {
                         ipInfo:{ip,country,area,region,city,county,isp}
                     });
                     await db.close();
-                    await cb({code:1})
+                    req.session.regenerate(async err=>{
+                        req.session.nickname = nickname;
+                        req.session.account = account;
+                        await cb({code:1})
+                    });
                 });
             });
             searchIp.on('error',e=>{
@@ -289,7 +288,28 @@ exports.saveSignUpInfo = function (info,cb) {
     )()
 }
 
-
+exports.login = (req,info,cb)=> {
+    (
+        async()=>{
+            let {account,password} = info;
+            let db = await mongodbClient.connect(DIARY_URL);
+            let userInfoDB = await db.collection('userInfo');
+            let accountRes = await userInfoDB.find({account}).toArray();
+            if(!accountRes.length){
+                cb({code:0,err:'该账户不存在，请注册'})
+                return false;
+            }
+            if(password!==accountRes[0].password){
+                cb({code:0,err:'密码错误，请重新输入'})
+                return false;
+            }
+            req.session.nickname = accountRes[0].nickname;
+            req.session.account = account;
+            cb({code:1,account,nickname:accountRes[0].nickname})
+            await db.close();
+        }
+    )()
+}
 //根据传入的bookid查找书名
 function _getBookNameBybid(bid) {
     return new Promise((res,rej)=>{

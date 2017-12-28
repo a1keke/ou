@@ -1,6 +1,11 @@
 /*scss*/
 .w5 {
     width:5rem !important;
+    p {
+        color: #4183c4;
+        text-align: center;
+        word-wrap: break-word;
+    }
 }
 .pre {
     background-color: #ccc;

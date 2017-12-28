@@ -83,8 +83,8 @@ class signUp extends Component{
         fetchSignUp({nickname,account,password,email,appVersion,platform});
     }
     render(){
-        let {isLogin} = this.props;
-        if(isLogin){
+        let {_nickname} = this.props;
+        if(_nickname){
             return (<Redirect to="/diary" />)
         }
         let {nicknameChange,accountChange,passwordChange,confirmChange,emailChange,submitSignUp} = this;
@@ -113,7 +113,7 @@ class signUp extends Component{
                                 </div>
                                 {nicknameErr?(<p className={S.error}>{nicknameErr}</p>):(null)}
                             </div>
-                            <div className="field">
+                            <div className={`field ${accountErr?'error':''}`}>
                                 <div className="ui left icon input">
                                     <i className="user icon blue"></i>
                                     <input
@@ -127,7 +127,7 @@ class signUp extends Component{
                                 </div>
                                 {accountErr?(<p className={S.error}>{accountErr}</p>):(null)}
                             </div>
-                            <div className="field">
+                            <div className={`field ${passwordErr?'error':''}`}>
                                 <div className="ui left icon input">
                                     <i className="lock icon blue"></i>
                                     <input
@@ -141,7 +141,7 @@ class signUp extends Component{
                                 </div>
                                 {passwordErr?(<p className={S.error}>{passwordErr}</p>):(null)}
                             </div>
-                            <div className="field">
+                            <div className={`field ${confirmErr?'error':''}`}>
                                 <div className="ui left icon input">
                                     <i className="lock icon blue"></i>
                                     <input
@@ -153,7 +153,7 @@ class signUp extends Component{
                                 </div>
                                 {confirmErr?(<p className={S.error}>{confirmErr}</p>):(null)}
                             </div>
-                            <div className="field">
+                            <div className={`field ${emailErr?'error':''}`}>
                                 <div className="ui left icon input">
                                     <i className="mail icon blue"></i>
                                     <input
@@ -177,7 +177,7 @@ class signUp extends Component{
 }
 const SignUp = connect(state=>{
     return {
-        isLogin:state.fetchReducer.isLogin
+        _nickname:state.fetchReducer.nickname
     }
 },dispatch=>{
     return {

@@ -31,7 +31,7 @@ class diaryTextarea extends Component{
     changeTitle(ev){this.setState({title:ev.target.value})};
 
     changeContent(ev){this.setState({content:ev.target.value})};
-//图片上传
+    //图片上传
     changeImage(ev){
         let {showToast} = this.props;
         let {imagesForm} = this.refs;
@@ -45,7 +45,7 @@ class diaryTextarea extends Component{
         }).then(res=>{
             return res.json();
         }).then(res=>{
-            if(res.code===0){
+            if(!res.code){
                 showToast('上传失败，请不要上传非法的类型');
                 return false;
             }
@@ -113,7 +113,7 @@ class diaryTextarea extends Component{
             console.log(res);
         })
     }
-//输入框支持tab键
+    //输入框支持tab键
     tabEvent(ev){
         if(ev.keyCode===9){
             let _content = this.refs.content;
@@ -126,11 +126,12 @@ class diaryTextarea extends Component{
             ev.preventDefault();
         }
     }
-//提交diary
+    //提交diary
     saveDairy(){
 
         let {fomartContent} = this;
-        let {showToast} = this.props;
+        let {_nickname,showToast} = this.props;
+        console.log(_nickname);
         let {title,content} = this.state;
 
         if(title==='' || content ===''){
@@ -145,14 +146,15 @@ class diaryTextarea extends Component{
             headers: {
                 'Content-Type': 'application/json'
             },
-            body:JSON.stringify({title,content})
+            credentials: 'same-origin',
+            body:JSON.stringify({title,content,nickname:_nickname})
         }
 
         fetch('/diary/saveDiary',init).then(res=>{
             return res.json();
         }).then(res=>{
             let {code} = res;
-            code === 1? showToast('保存成功，请刷新本页'):showToast('保存失败');
+            code === 1? showToast('保存成功，请刷新本页'):showToast(res.err);
 
         }).catch(res=>{
             showToast('保存失败');
@@ -272,8 +274,10 @@ class diaryTextarea extends Component{
         let {changeTitle,changeContent,saveDairy,tabEvent,changeImage,deleteImage} = this;
 
         let {title,content,imagesValue,images} = this.state;
-
-        let {showToast} = this.props;
+        let {showToast,_nickname} = this.props;
+        if(!_nickname){
+            return (null)
+        }
         let imagesArr = images.length?(
             <div className={`ui tiny images ${S.images}`}>
                 {
@@ -320,7 +324,11 @@ class diaryTextarea extends Component{
         );
     }
 }
-const DiaryTextarea = connect(state=>{return{}},dispatch=>{
+const DiaryTextarea = connect(state=>{
+    return{
+        _nickname:state.fetchReducer.nickname
+    }
+},dispatch=>{
     return {
         showToast:(text,btnEvent)=>dispatch(showToast(text,btnEvent))
     }

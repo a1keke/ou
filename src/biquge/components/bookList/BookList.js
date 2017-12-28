@@ -30,7 +30,7 @@ export default class BookList extends Component{
 
             return (
                 <div className="item" key={i}>
-                    <a className={`content ${S.disBlock}`} href={`./biquge/${ele.index}`}>
+                    <a className={`content ${S.disBlock}`} href={`./${ele.index}`}>
                         <div className="header">{ele.name}</div>
                     </a>
                 </div>

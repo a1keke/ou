@@ -10,7 +10,7 @@ export default class Diary extends Component{
 
         let {diary,isDetail} = this.props;
 
-        let {index,time,week,title,content} = diary;
+        let {index,time,week,title,content,nickname} = diary;
 
         let temp = '';
 
@@ -48,6 +48,7 @@ export default class Diary extends Component{
             <div className="event">
                 <div className={`label ${S.w5}`}>
                     <img src="/static/resource/e2cd6ca52f67d1d413c338602cb7f61d.jpg" />
+                    <p>{nickname}</p>
                 </div>
                 <div className={`content ${S.w}`}>
                     <div className="summary">

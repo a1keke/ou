@@ -1,6 +1,7 @@
 ﻿
 let express = require('express');
 let session = require('express-session');
+let MongoStore = require('connect-mongo')(session);
 let path = require('path')
 let ejs = require('ejs');
 let bodyParser = require('body-parser');
@@ -12,11 +13,15 @@ var app = express();
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
-app.use(session({
+app.use('/diary',session({
     name:'ouyuqin',
     secret:'ouyuqin',
     resave: false,
     saveUninitialized: true,
+    store:new MongoStore({
+        url:'mongodb://localhost:27017/diary',
+
+    }),
     cookie:{
         maxAge:1000*60*60*24*30
     }
@@ -28,13 +33,15 @@ app.use('/jianshu', function(req, res) {
     res.render('jianshu/index', '');
 });
 //接口
-app.post('/base',router.baseInfo);
+app.post('/diary/base',router.baseInfo);
 app.use('/diary/getAllDiary',router.getAllDiary);
 app.post('/diary/saveDiary',router.saveDiary);
 app.post('/diary/upImages',upload.array('images'),router.upImages);
 app.post('/diary/deleteImage',router.deleteImage);
 app.post('/diary/getDiary',router.getDiary);
 app.post('/diary/signUp',router.signUp);
+app.post('/diary/login',router.login);
+app.post('/diary/logout',router.logout);
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);

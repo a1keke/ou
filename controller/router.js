@@ -6,7 +6,11 @@ let validator = require('./../util/validator.js').validator;
 let serverCrypto = require('./../util/_crypto.server.js')
 //public
 exports.baseInfo = function (req,res) {
-    mongodb.saveBaseInfo(req,result=>{
+    let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
+    let {appVersion,platform} = req.body;
+    let nickname = req.session.nickname?req.session.nickname:'';
+    let account = req.session.account?req.session.account:'';
+    mongodb.saveBaseInfo(req,{ip,appVersion,platform,nickname,account},result=>{
         res.json(result);
     });
 }
@@ -42,9 +46,15 @@ exports.getChapter = function (req,res) {
 }
 //diary
 exports.saveDiary = function (req,res) {
-    let {title,content} = req.body;
+    let {account} = req.session;
+    if(!account){
+        res.json({code:0,err:'未登录，请先登录'});
+        return false;
+    }
+    let {title,content,nickname} = req.body;
     
-    mongodb.saveDiary({title,content},(result)=>{
+    console.log(nickname);
+    mongodb.saveDiary({title,content,nickname},(result)=>{
         res.json(result);
     })
 }
@@ -98,10 +108,41 @@ exports.signUp = function (req,res) {
         return false;
     }
     let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
-    mongodb.saveSignUpInfo({ip,nickname,account,password,email,appVersion,platform},result=>{
-        req.session.nickname = nickname;
-        req.session.account = account;
-        res.json(result);
+    mongodb.saveSignUpInfo(
+        req,
+        {ip,nickname,account,password,email,appVersion,platform},
+        result=>{res.json(result);
     })
+}
+exports.login = function (req,res) {
+    let {info} = req.body;
+    if(!info){
+        res.json({code:0,err:'提交信息异常，请重新提交'})
+        return false;
+    }
+    try {
+        info = JSON.parse(serverCrypto.pubDecrypt(info));
+    }catch (e){
+        res.json({code:0,err:'提交信息异常，请重新提交'})
+        return false;
+    }
+    let {account,password} = info;
 
+    if(!account || !password){
+        res.json({code:0,err:'请完成所有必填项'})
+        return false;
+    }
+    let accountErr = validator.valiOneByValue('account',account);
+    let passwordErr = validator.valiOneByValue('password',password);
+    if(accountErr && passwordErr){
+        res.json({code:0,err:'格式错误，请更正'})
+        return false;
+    }
+    mongodb.login(req,{account,password},result=>{res.json(result)})
+}
+exports.logout = function (req,res) {
+    req.session.destroy(err=>{
+        res.clearCookie('ouyuqin');
+        res.json({code:0});
+    })
 }
