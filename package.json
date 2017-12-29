@@ -6,8 +6,8 @@
   "scripts": {
     "webpack": "webpack",
     "program": "node program",
-    "build": "webpack --config webpack.build.config.js",
-    "test": "webpack --config webpack.test.config.js"
+    "production": "webpack --config webpack.production.config.js",
+    "dev": "webpack --config webpack.development.config.js"
   },
   "author": "",
   "license": "ISC",
