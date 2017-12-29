@@ -304,6 +304,7 @@ class diaryTextarea extends Component{
                     <div className={`ui labeled input ${S.mb}`}>
                         <a className="ui label">title</a>
                         <input value={title} type="text" placeholder="请输入标题"  onChange={changeTitle} />
+                        <input type="text" style={{display:'none'}}/>
                     </div>
                     <div className="field">
                         <textarea value={content} onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
