@@ -45,7 +45,7 @@ export default class Diary extends Component{
         ):(null);
 
         return (
-            <div className="event">
+            <div className={`event ${S.p1}`}>
                 <div className={`label ${S.w5}`}>
                     <img src="/static/resource/e2cd6ca52f67d1d413c338602cb7f61d.jpg" />
                     <p>{nickname}</p>
@@ -54,6 +54,7 @@ export default class Diary extends Component{
                     <div className="summary">
                         <Link to={`/diary/${title}`}>{title}</Link>
                         <div className="date">{time}{week}</div>
+                        <a className="date">删除</a>
                     </div>
                     {_content}
                     {moreIcon}

@@ -10,24 +10,27 @@ class index extends Component{
 
     }
     componentDidMount(){
-        this.props.fetchDiaryList();
+        this.props.diaryList.length?'':this.props.fetchDiaryList();
     }
     shouldComponentUpdate(nextProps,nextState){
         return !(JSON.stringify(nextProps.diaryList)===JSON.stringify(this.props.diaryList))
 
     }
     render(){
-        let {diaryList} = this.props;
+        let {diaryList,account} = this.props;
         return (
           <div>
-              <DiaryTextarea/>
+              {account?<DiaryTextarea/>:null}
               <DiaryList {...{diaryList}}/>
           </div>
         );
     }
 }
 const Index = connect(state=>{
-    return {diaryList:state.fetchReducer.diaryList}
+    return {
+        diaryList:state.fetchReducer.diaryList,
+        account:state.fetchReducer.account
+    }
 },dispatch=>{
     return {
         fetchDiaryList:()=>dispatch(fetchDiaryList())

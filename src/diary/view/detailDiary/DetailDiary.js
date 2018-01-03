@@ -14,10 +14,6 @@ class detailDiary extends Component{
         this.props.fetchDetailDiary(title);
     }
 
-    shouldComponentUpdate(nextProps,nextState){
-        return !(JSON.stringify(nextProps.diary)===JSON.stringify(this.props.diary)&&JSON.stringify(nextProps.status)===JSON.stringify(this.props.status));
-    }
-
     render(){
 
         let {diary,status} = this.props;

@@ -93,13 +93,13 @@ exports.getBookNameBybid = function (req,cb) {
 exports.saveDiary = function (args,cb) {
     (
         async ()=>{
-            let {title,content,nickname} = args;
+            let {title,content,nickname,account} = args;
             let {time,week} = _getNowFormatDate();
             let index = await _getDiaryLength();
             let db = await mongodbClient.connect(DIARY_URL);
             let diaryDB = await db.collection('diary');
             try{
-                await diaryDB.insert({index:index+1,nickname,time,week,title,content});
+                await diaryDB.insert({index:index+1,nickname,account,time,week,title,content});
                 await db.close();
                 await cb({code:1});
             }catch (e){
@@ -109,12 +109,13 @@ exports.saveDiary = function (args,cb) {
     )()
 }
 // 取出所有日记
-exports.getAllDiary = function (cb) {
+exports.getAllDiary = function (account,cb) {
     (
         async()=>{
             let db = await mongodbClient.connect(DIARY_URL);
             let diary = await db.collection('diary');
-            let diaryArr = await diary.find({}).toArray();
+            let diaryArr = await diary.find({account}).toArray();
+            let nickname = await _getNicknameByAccount(account);
             diaryArr = diaryArr.map((ele,i)=>{
                return {
                    index:ele.index,
@@ -122,7 +123,7 @@ exports.getAllDiary = function (cb) {
                    week:ele.week,
                    title:ele.title,
                    content:ele.content,
-                   nickname:ele.nickname
+                   nickname
                }
             });
             await db.close();
@@ -134,13 +135,23 @@ exports.getAllDiary = function (cb) {
 exports.getDiary = function (args,cb) {
     (
         async(args,cb)=>{
-            let {title} = args;
+            let {title,account} = args;
             let db = await mongodbClient.connect(DIARY_URL);
             let diaryDB = await db.collection('diary');
             try{
+
                 let diary = await diaryDB.find({title}).toArray();
                 await db.close();
-                diary.length?cb({
+                if(!diary.length){
+                    cb({code:0,err:'cant find'});
+                    return false;
+                }
+                if(diary[0].account!==account){
+                    cb({code:0,err:'没有权限'});
+                    return false;
+                }
+                let nickname = await _getNicknameByAccount(account);
+                cb({
                     code:1,
                     diary:{
                         index:diary[0].index,
@@ -148,9 +159,9 @@ exports.getDiary = function (args,cb) {
                         week:diary[0].week,
                         title:diary[0].title,
                         content:diary[0].content,
-                        nickname:diary[0].nickname
+                        nickname
                     }
-                }):cb({code:0,err:'cant find'});
+                })
             }catch (e){
                 await db.close();
                 await cb({code:0,err:e})
@@ -361,6 +372,17 @@ function _getDiaryLength() {
 
             return stats.count;
 
+        }
+    )()
+}
+const _getNicknameByAccount = (account)=>{
+    return (
+        async()=>{
+            let db = await mongodbClient.connect(DIARY_URL);
+            let userInfoDB = await db.collection('userInfo');
+            let nicknameRes = await userInfoDB.find({account}).toArray();
+            await db.close();
+            return nicknameRes[0].nickname;
         }
     )()
 }

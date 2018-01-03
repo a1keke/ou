@@ -130,8 +130,7 @@ class diaryTextarea extends Component{
     saveDairy(){
 
         let {fomartContent} = this;
-        let {_nickname,showToast} = this.props;
-        console.log(_nickname);
+        let {_account,showToast} = this.props;
         let {title,content} = this.state;
 
         if(title==='' || content ===''){
@@ -147,7 +146,7 @@ class diaryTextarea extends Component{
                 'Content-Type': 'application/json'
             },
             credentials: 'same-origin',
-            body:JSON.stringify({title,content,nickname:_nickname})
+            body:JSON.stringify({title,content,account:_account})
         }
 
         fetch('/diary/saveDiary',init).then(res=>{
@@ -275,9 +274,6 @@ class diaryTextarea extends Component{
 
         let {title,content,imagesValue,images} = this.state;
         let {showToast,_nickname} = this.props;
-        if(!_nickname){
-            return (null)
-        }
         let imagesArr = images.length?(
             <div className={`ui tiny images ${S.images}`}>
                 {
@@ -327,7 +323,7 @@ class diaryTextarea extends Component{
 }
 const DiaryTextarea = connect(state=>{
     return{
-        _nickname:state.fetchReducer.nickname
+        _account:state.fetchReducer.account
     }
 },dispatch=>{
     return {

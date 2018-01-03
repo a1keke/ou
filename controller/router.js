@@ -46,21 +46,29 @@ exports.getChapter = function (req,res) {
 }
 //diary
 exports.saveDiary = function (req,res) {
-    let {account} = req.session;
-    if(!account){
+    let {
+        account:sessionAccount,
+        nickname:sessionNickname
+    } = req.session;
+    if(!sessionAccount || !sessionNickname){
         res.json({code:0,err:'未登录，请先登录'});
         return false;
     }
-    let {title,content,nickname} = req.body;
-    
-    console.log(nickname);
-    mongodb.saveDiary({title,content,nickname},(result)=>{
+    let {title,content,nickname,account} = req.body;
+
+    if(sessionAccount!==account || sessionNickname!==nickname){
+        res.json({code:0,err:'异常的状态提交，请重新提交'});
+        return false;
+    }
+
+    mongodb.saveDiary({title,content,nickname,account},(result)=>{
         res.json(result);
     })
 }
 
 exports.getAllDiary = function (req,res) {
-    mongodb.getAllDiary(result=>{
+    let account = req.session.account?req.session.account:'qianke';
+    mongodb.getAllDiary(account,result=>{
         res.json(result);
     })
 }
@@ -76,8 +84,9 @@ exports.deleteImage = function (req,res) {
     })
 }
 exports.getDiary = function (req,res) {
-    let {title} = req.body
-    mongodb.getDiary({title},result=>{
+    let {title} = req.body;
+    let account = req.session.account?req.session.account:'qianke';
+    mongodb.getDiary({title,account},result=>{
         res.json(result)
     })
 }
