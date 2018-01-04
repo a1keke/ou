@@ -54,14 +54,14 @@ exports.saveDiary = function (req,res) {
         res.json({code:0,err:'未登录，请先登录'});
         return false;
     }
-    let {title,content,nickname,account} = req.body;
+    let {title,content,account} = req.body;
 
-    if(sessionAccount!==account || sessionNickname!==nickname){
+    if(sessionAccount!==account){
         res.json({code:0,err:'异常的状态提交，请重新提交'});
         return false;
     }
 
-    mongodb.saveDiary({title,content,nickname,account},(result)=>{
+    mongodb.saveDiary({title,content,account},(result)=>{
         res.json(result);
     })
 }

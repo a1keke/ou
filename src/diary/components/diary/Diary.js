@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import S from './style.scss';
+import Img from './../img/Img.js';
 
 export default class Diary extends Component{
     constructor(props){
@@ -28,7 +29,7 @@ export default class Diary extends Component{
                 temp = temp+ele.part +'\n';
                 return <pre key={i} className={S.pre}><code className={S.code}>{temp}</code></pre>
             }else if(ele.attr === 6){
-                return <img src={ele.part} key={i}/>
+                return <Img url={ele.part} key={i}/>
             }
         }).filter(ele=>ele);
         _content = content.length > 8 && !isDetail?(

@@ -93,13 +93,13 @@ exports.getBookNameBybid = function (req,cb) {
 exports.saveDiary = function (args,cb) {
     (
         async ()=>{
-            let {title,content,nickname,account} = args;
+            let {title,content,account} = args;
             let {time,week} = _getNowFormatDate();
             let index = await _getDiaryLength();
             let db = await mongodbClient.connect(DIARY_URL);
             let diaryDB = await db.collection('diary');
             try{
-                await diaryDB.insert({index:index+1,nickname,account,time,week,title,content});
+                await diaryDB.insert({index:index+1,account,time,week,title,content});
                 await db.close();
                 await cb({code:1});
             }catch (e){
