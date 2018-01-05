@@ -57,7 +57,7 @@ exports.saveDiary = function (req,res) {
     let {title,content,account} = req.body;
 
     if(sessionAccount!==account){
-        res.json({code:0,err:'异常的状态提交，请重新提交'});
+        res.json({code:0,err:'异常的状态'});
         return false;
     }
 
@@ -89,6 +89,26 @@ exports.getDiary = function (req,res) {
     mongodb.getDiary({title,account},result=>{
         res.json(result)
     })
+}
+exports.deleteDiary = function (req,res) {
+    let {
+        account:sessionAccount,
+        nickname:sessionNickname
+    } = req.session;
+    if(!sessionAccount || !sessionNickname){
+        res.json({code:0,err:'未登录，请先登录'});
+        return false;
+    }
+    let {index,account} = req.body;
+
+    if(sessionAccount!==account){
+        res.json({code:0,err:'异常的状态'});
+        return false;
+    }
+    mongodb.deleteDiary({index,account},result=>{
+        res.json(result);
+    })
+
 }
 exports.signUp = function (req,res) {
     let {info} = req.body;
@@ -152,6 +172,8 @@ exports.login = function (req,res) {
 exports.logout = function (req,res) {
     req.session.destroy(err=>{
         res.clearCookie('ouyuqin');
-        res.json({code:0});
+        mongodb.getAllDiary('qianke',result=>{
+            res.json(result);
+        })
     })
 }

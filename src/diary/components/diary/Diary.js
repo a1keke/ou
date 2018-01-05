@@ -2,16 +2,18 @@ import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import S from './style.scss';
 import Img from './../img/Img.js';
+import {connect} from 'react-redux';
+import {fetchDeleteDiary,showToast} from '../../redux/action/index.js';
 
-export default class Diary extends Component{
+class diary extends Component{
     constructor(props){
         super(props);
     }
     render(){
 
-        let {diary,isDetail} = this.props;
+        let {diary,isDetail,showToast} = this.props;
 
-        let {index,time,week,title,content,nickname} = diary;
+        let {index,time,week,title,content,nickname,account} = diary;
 
         let temp = '';
 
@@ -55,7 +57,16 @@ export default class Diary extends Component{
                     <div className="summary">
                         <Link to={`/diary/${title}`}>{title}</Link>
                         <div className="date">{time}{week}</div>
-                        <a className="date">删除</a>
+                        {
+                            localStorage.getItem('account')===account&&!isDetail?
+                                <a
+                                    className="date"
+                                    onClick={()=>{
+                                        showToast('确定要删除这篇diary吗？',{account,index});
+                                    }}
+
+                                >删除</a>:''
+                        }
                     </div>
                     {_content}
                     {moreIcon}
@@ -64,3 +75,16 @@ export default class Diary extends Component{
         );
     }
 }
+
+const Diary = connect(state=>{
+    return{}
+},dispatch=>{
+    return {
+        showToast:(text,info)=>dispatch(showToast(text,()=>{
+            dispatch(fetchDeleteDiary(info))
+        })),
+    }
+
+})(diary);
+
+export default Diary;

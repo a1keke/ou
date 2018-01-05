@@ -46,6 +46,15 @@ exports.deleteImage = function (args,cb) {
         err?cb({code:0,err:'delete err'}):cb({code:1});
     })
 }
+exports.deleteImages = imagesUrl =>{
+
+    let promiseArr = imagesUrl.map(ele=>{
+        return fs.unlink(path.resolve(__dirname,'./../')+ele,err=>{})
+    })
+
+    return Promise.all(promiseArr);
+
+}
 
 
 function _getMIME(type) {

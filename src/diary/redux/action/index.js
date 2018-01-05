@@ -19,6 +19,12 @@ const FETCH_ERROR = e =>{
         e
     }
 };
+const DELETE_ONE_DIARY = res =>{
+    return {
+        type:'DELETE_ONE_DIARY',
+        res
+    }
+};
 //发送基本信息的action
 export const fetchBaseInfo = postData=>{
     return dispatch =>{
@@ -146,12 +152,28 @@ export const fetchLogout = ()=>{
             dispatch(FETCH_SUCCESS({
                 nickname:'',
                 account:'',
+                diaryList:res.diaryList
             }))
-            dispatch(fetchDiaryList());
         })
     }
 }
-
+//删除日记的action
+export const fetchDeleteDiary = info=>{
+    return dispatch=>{
+        return fetch('/diary/deleteDiary',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body:JSON.stringify(info)
+        }).then(res=>res.json()).then(res=>{
+            res.code?
+                dispatch(showToast('删除成功！'))&&dispatch(DELETE_ONE_DIARY({index:info.index}))
+                :dispatch(showToast(`删除失败! ${res.err}`));
+        })
+    }
+}
 
 // 更改弹框状态的action
 export const showToast = (text,btnEvent)=>{

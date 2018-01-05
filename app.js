@@ -42,6 +42,7 @@ app.post('/diary/getDiary',router.getDiary);
 app.post('/diary/signUp',router.signUp);
 app.post('/diary/login',router.login);
 app.post('/diary/logout',router.logout);
+app.post('/diary/deleteDiary',router.deleteDiary);
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);

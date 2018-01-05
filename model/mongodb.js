@@ -3,6 +3,7 @@
 let mongodb = require('mongodb');
 let querystring = require('querystring');
 let http = require('http');
+let file = require('./file.js')
 let mongodbClient = mongodb.MongoClient;
 
 const BQG_URL = 'mongodb://localhost:27017/biquge';
@@ -123,11 +124,12 @@ exports.getAllDiary = function (account,cb) {
                    week:ele.week,
                    title:ele.title,
                    content:ele.content,
+                   account,
                    nickname
                }
             });
             await db.close();
-            await cb({diaryList:diaryArr.reverse()});
+            await cb({code:0,diaryList:diaryArr.reverse()});
         }
     )()
 }
@@ -159,6 +161,7 @@ exports.getDiary = function (args,cb) {
                         week:diary[0].week,
                         title:diary[0].title,
                         content:diary[0].content,
+                        account,
                         nickname
                     }
                 })
@@ -168,6 +171,44 @@ exports.getDiary = function (args,cb) {
             }
         }
     )(args,cb)
+}
+//删除一篇日记
+exports.deleteDiary = (args,cb) =>{
+    (
+        async()=>{
+            let {account,index} = args;
+
+            let db = await mongodbClient.connect(DIARY_URL);
+
+            let diaryDB = await db.collection('diary');
+
+            let diaryArr = await diaryDB.find().toArray();
+
+            let diaryRes = diaryArr.filter(ele=>ele.index === index);
+
+            if(!diaryRes.length){
+                cb({code:0,err:'未找到对应的diary，请重新核实'})
+                return false;
+            }
+            if(diaryRes[0].account !== account){
+                cb({code:0,err:'没有权限删除这篇diary'})
+                return false;
+            }
+            let images = [];
+            diaryRes[0].content.map(ele=>{
+                ele.attr===6?images.push(ele.part):'';
+            });
+            if(images.length){
+                await file.deleteImages(images);
+            }
+
+            await diaryDB.deleteOne({index});
+
+            cb({code:1});
+
+        }
+    )()
+    
 }
 //存信息
 exports.saveBaseInfo = function (req,info,cb) {

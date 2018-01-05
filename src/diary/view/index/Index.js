@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
 import DiaryList from '../../components/diaryList/DiaryList.js';
 import {connect} from 'react-redux';
-import {fetchDiaryList} from '../../redux/action/index.js';
+import {fetchDiaryList,fetchDeleteDiary} from '../../redux/action/index.js';
 
 class index extends Component{
     constructor(props){
@@ -13,7 +13,7 @@ class index extends Component{
         this.props.diaryList.length?'':this.props.fetchDiaryList();
     }
     shouldComponentUpdate(nextProps,nextState){
-        return !(JSON.stringify(nextProps.diaryList)===JSON.stringify(this.props.diaryList))
+        return JSON.stringify(nextProps.diaryList)!==JSON.stringify(this.props.diaryList)
 
     }
     render(){

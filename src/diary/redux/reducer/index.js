@@ -22,7 +22,11 @@ export const fetchReducer = (state=fetchState,action)=>{
         case 'FETCH_FAIL':
             return objectAssign({},state,action.res);
         case 'FETCH_ERROR':
-            return objectAssign({},state,{e:action.e})
+            return objectAssign({},state,{e:action.e});
+        case 'DELETE_ONE_DIARY':
+            let diaryList = state.diaryList.filter(ele=>ele.index!==action.res.index)
+            return objectAssign({},state,{diaryList});
+
         default:
             return state
     }
