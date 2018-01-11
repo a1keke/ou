@@ -50,7 +50,7 @@ class loadingMore extends Component{
                 {this.props.children}
                 <div className={`${S.bdn} ui segment`} ref="loading">
                     <div className="ui active inverted dimmer">
-                        <div className={`ui text ${nextPage?'loader':''}`}>{nextPage?'':'到底啦!'}</div>
+                        <div className={`ui text ${nextPage?'loader':S.blue}`}>{nextPage?'':'到底啦!'}</div>
                     </div>
                 </div>
             </div>

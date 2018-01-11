@@ -121,12 +121,7 @@ exports.getAllDiary = function (args,cb) {
             let diaryArr = await diary.find({account}).sort({'index':-1}).toArray();
             if(!diaryArr.length){
                 await db.close();
-                await cb({code:0,diaryList:diaryArr,page:1,nextPage:-1});
-                return false;
-            }
-            if(PAGE_SIZE*nextPage>diaryArr.length){
-                await db.close();
-                await cb({code:1,err:'没有这么多diary'});
+                await cb({code:0,diaryList:[],page:1,nextPage:-1});
                 return false;
             }
             let nickname = await _getNicknameByAccount(account);
@@ -145,7 +140,7 @@ exports.getAllDiary = function (args,cb) {
                 }
             }).filter(ele=>ele);
             await db.close();
-            await cb({code:0,diaryList:diaryArr,page:nextPage,nextPage:_nextPage});
+            await cb({code:1,diaryList:diaryArr,page:nextPage,nextPage:_nextPage});
         }
     )()
 }
