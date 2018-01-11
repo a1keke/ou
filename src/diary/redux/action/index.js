@@ -165,8 +165,8 @@ export const fetchLogout = ()=>{
                 nickname:'',
                 account:'',
                 diaryList:res.diaryList,
-                page : 1,
-                nextPage : 2
+                page : res.page,
+                nextPage : res.nextPage
             }))
         })
     }
