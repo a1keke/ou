@@ -12,6 +12,8 @@ const DIARY_URL = 'mongodb://localhost:27017/diary';
 
 const BASEINFO_URL = 'mongodb://localhost:27017/baseInfo';
 
+const PAGE_SIZE = 5;
+
 
 // 查
 //查所有书
@@ -110,26 +112,35 @@ exports.saveDiary = function (args,cb) {
     )()
 }
 // 取出所有日记
-exports.getAllDiary = function (account,cb) {
+exports.getAllDiary = function (args,cb) {
     (
         async()=>{
+            let {account,nextPage} = args;
             let db = await mongodbClient.connect(DIARY_URL);
             let diary = await db.collection('diary');
-            let diaryArr = await diary.find({account}).toArray();
+            let diaryArr = await diary.find({account}).sort({'index':-1}).toArray();
+            if(!diaryArr.length){
+                await db.close();
+                await cb({code:0,diaryList:diaryArr,page:1,nextPage:-1});
+                return false;
+            }
             let nickname = await _getNicknameByAccount(account);
+            let _nextPage = diaryArr.length>nextPage*PAGE_SIZE?nextPage+1:0;
             diaryArr = diaryArr.map((ele,i)=>{
-               return {
-                   index:ele.index,
-                   time:ele.time,
-                   week:ele.week,
-                   title:ele.title,
-                   content:ele.content,
-                   account,
-                   nickname
-               }
-            });
+                if(i>(nextPage-1)*PAGE_SIZE-1&&i<=nextPage*PAGE_SIZE-1){
+                    return {
+                        index:ele.index,
+                        time:ele.time,
+                        week:ele.week,
+                        title:ele.title,
+                        content:ele.content,
+                        account,
+                        nickname
+                    }
+                }
+            }).filter(ele=>ele);
             await db.close();
-            await cb({code:0,diaryList:diaryArr.reverse()});
+            await cb({code:0,diaryList:diaryArr,page:nextPage,nextPage:_nextPage});
         }
     )()
 }

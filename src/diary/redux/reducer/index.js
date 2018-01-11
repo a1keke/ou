@@ -8,6 +8,8 @@ const fetchState = {
     diary :null,//单篇日记
     status:1,//页面状态1正常，0异常
     diaryList:[],//所有日记,
+    page : 0,
+    nextPage : 1,
     nickname:localStorage.getItem('nickname')?localStorage.getItem('nickname'):'',
     account:localStorage.getItem('account')?localStorage.getItem('account'):'',
 }

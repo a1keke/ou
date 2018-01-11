@@ -76,13 +76,21 @@ export const fetchDetailDiary = diaryTitle=>{
     }
 }
 // 获取diary列表的action
-export const fetchDiaryList = ()=>{
+export const fetchDiaryList = (nextPage,diaryList,cb)=>{
     return dispatch =>{
         return fetch('/diary/getAllDiary',{
-            credentials: 'same-origin'
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body:JSON.stringify({nextPage})
         })
             .then(res => res.json())
-            .then(res => dispatch(FETCH_SUCCESS({diaryList:res.diaryList})))
+            .then(res => {
+                if(cb){cb();}
+                dispatch(FETCH_SUCCESS({diaryList:diaryList.concat(res.diaryList),page:res.page,nextPage:res.nextPage}))
+            })
             .catch(e => dispatch(FETCH_ERROR(e)))
     }
 }

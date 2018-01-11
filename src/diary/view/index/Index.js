@@ -1,44 +1,34 @@
 import React,{Component} from 'react';
 import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
 import DiaryList from '../../components/diaryList/DiaryList.js';
+import LoadingMore from '../../components/loadingMore/LoadingMore.js';
 import {connect} from 'react-redux';
 import {fetchDiaryList,fetchDeleteDiary} from '../../redux/action/index.js';
-import iScroll from 'iscroll/build/iscroll-probe.js';
 
 class index extends Component{
     constructor(props){
         super(props);
-        this.scrollEvent = this.scrollEvent.bind(this);
-        this.scrollEndEvent = this.scrollEndEvent.bind(this);
-        this.scrollBox = null;
     }
     componentDidMount(){
+        let {diaryList,nextPage,fetchDiaryList} = this.props;
         if(!this.props.diaryList.length){
-            this.props.fetchDiaryList()
-        }
-        window.onscroll = ()=>{
-            console.log(1);
+            fetchDiaryList(nextPage,diaryList);
         }
     }
     shouldComponentUpdate(nextProps,nextState){
-        return JSON.stringify(nextProps.diaryList)!==JSON.stringify(this.props.diaryList)
-    }
-    scrollEvent(){
-        console.log(1);
-        return true;
-    }
-    scrollEndEvent(){
-        console.log(2);
-        return true;
+        return JSON.stringify(nextProps.diaryList)!==JSON.stringify(this.props.diaryList)||JSON.stringify(nextProps.nextPage)!==JSON.stringify(this.props.nextPage)
     }
     render(){
-        let {diaryList,account} = this.props;
+        let {diaryList,account,nextPage} = this.props;
         return (
-          <div id="diaryList" style={{height: window.innerHeight,position:'relative'}}>
-              <div style={{position:'absolute',width:'100%'}}>
-                  {account?<DiaryTextarea/>:null}
+          <div>
+              {account?<DiaryTextarea/>:null}
+              {nextPage===-1?
                   <DiaryList {...{diaryList}}/>
-              </div>
+                  :<LoadingMore>
+                      <DiaryList {...{diaryList}}/>
+                  </LoadingMore>
+              }
           </div>
         );
     }
@@ -46,11 +36,12 @@ class index extends Component{
 const Index = connect(state=>{
     return {
         diaryList:state.fetchReducer.diaryList,
-        account:state.fetchReducer.account
+        account:state.fetchReducer.account,
+        nextPage:state.fetchReducer.nextPage
     }
 },dispatch=>{
     return {
-        fetchDiaryList:()=>dispatch(fetchDiaryList())
+        fetchDiaryList:(nextPage,diaryList,cb)=>dispatch(fetchDiaryList(nextPage,diaryList,cb))
     }
 })(index);
 export default Index;

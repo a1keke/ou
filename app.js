@@ -34,7 +34,7 @@ app.use('/jianshu', function(req, res) {
 });
 //接口
 app.post('/diary/base',router.baseInfo);
-app.use('/diary/getAllDiary',router.getAllDiary);
+app.post('/diary/getAllDiary',router.getAllDiary);
 app.post('/diary/saveDiary',router.saveDiary);
 app.post('/diary/upImages',upload.array('images'),router.upImages);
 app.post('/diary/deleteImage',router.deleteImage);

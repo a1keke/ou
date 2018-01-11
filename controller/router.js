@@ -3,7 +3,7 @@
 let mongodb = require('./../model/mongodb.js');
 let file = require('./../model/file.js');
 let validator = require('./../util/validator.js').validator;
-let serverCrypto = require('./../util/_crypto.server.js')
+let serverCrypto = require('./../util/_crypto.server.js');
 //public
 exports.baseInfo = function (req,res) {
     let ip = req.headers['x-real-ip'] ? req.headers['x-real-ip'] : req.ip.replace(/::ffff:/, '');
@@ -68,7 +68,8 @@ exports.saveDiary = function (req,res) {
 
 exports.getAllDiary = function (req,res) {
     let account = req.session.account?req.session.account:'qianke';
-    mongodb.getAllDiary(account,result=>{
+    let nextPage = req.body.nextPage?req.body.nextPage:1;
+    mongodb.getAllDiary({account,nextPage},result=>{
         res.json(result);
     })
 }
@@ -172,7 +173,7 @@ exports.login = function (req,res) {
 exports.logout = function (req,res) {
     req.session.destroy(err=>{
         res.clearCookie('ouyuqin');
-        mongodb.getAllDiary('qianke',result=>{
+        mongodb.getAllDiary({account:'qianke',nextPage:1},result=>{
             res.json(result);
         })
     })
