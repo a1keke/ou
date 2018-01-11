@@ -124,6 +124,11 @@ exports.getAllDiary = function (args,cb) {
                 await cb({code:0,diaryList:diaryArr,page:1,nextPage:-1});
                 return false;
             }
+            if(PAGE_SIZE*nextPage>diaryArr.length){
+                await db.close();
+                await cb({code:1,err:'没有这么多diary'});
+                return false;
+            }
             let nickname = await _getNicknameByAccount(account);
             let _nextPage = diaryArr.length>nextPage*PAGE_SIZE?nextPage+1:0;
             diaryArr = diaryArr.map((ele,i)=>{

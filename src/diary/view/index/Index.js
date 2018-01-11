@@ -3,7 +3,7 @@ import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
 import DiaryList from '../../components/diaryList/DiaryList.js';
 import LoadingMore from '../../components/loadingMore/LoadingMore.js';
 import {connect} from 'react-redux';
-import {fetchDiaryList,fetchDeleteDiary} from '../../redux/action/index.js';
+import {fetchDiaryList} from '../../redux/action/index.js';
 
 class index extends Component{
     constructor(props){

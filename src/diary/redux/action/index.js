@@ -116,7 +116,9 @@ export const fetchSignUp = info=>{
                     dispatch(FETCH_SUCCESS({
                         nickname:info.nickname,
                         account:info.account,
-                        diaryList:[]
+                        diaryList:[],
+                        page : 0,
+                        nextPage : 1
                     }))
                 }
             })
@@ -143,7 +145,9 @@ export const fetchLogin = (info)=>{
                 dispatch(FETCH_SUCCESS({
                     nickname:res.nickname,
                     account:res.account,
-                    diaryList:[]
+                    diaryList:[],
+                    page : 0,
+                    nextPage : 1
                 }))
             }
         })
@@ -160,7 +164,9 @@ export const fetchLogout = ()=>{
             dispatch(FETCH_SUCCESS({
                 nickname:'',
                 account:'',
-                diaryList:res.diaryList
+                diaryList:res.diaryList,
+                page : 1,
+                nextPage : 2
             }))
         })
     }
