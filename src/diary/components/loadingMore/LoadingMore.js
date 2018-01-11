@@ -32,9 +32,6 @@ class loadingMore extends Component{
         }
     }
 
-    shouldComponentUpdate(nextProps,nextState){
-        return JSON.stringify(nextProps.nextPage)!==JSON.stringify(this.props.nextPage)
-    }
     componentWillUnmount(){
         window.onscroll = null;
     }

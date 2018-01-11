@@ -20,6 +20,7 @@ class index extends Component{
     }
     render(){
         let {diaryList,account,nextPage} = this.props;
+
         return (
           <div>
               {account?<DiaryTextarea/>:null}
