@@ -14,6 +14,7 @@ class header extends Component{
     }
     render(){
         let {nickname,fetchLogout,showToast} = this.props;
+        let width = document.body.clientWidth;
         let btn = nickname?(
             <i
                 className='circular sign in icon large link'
@@ -29,7 +30,15 @@ class header extends Component{
             ></i>
         </Link>);
         return (
-            <h2 className={`ui center aligned icon header ${S.mt}`}>
+            <h2 className={`ui center aligned header ${S.mt}`}>
+                <nav className={`${S.nav}`}>
+                    <Link to="#" className="ui blue floated right button">
+                        {width>800?'About Me':<i className={`user link icon ${S.m0}`}></i>}
+                    </Link>
+                    <Link to="#" className="ui blue floated right button">
+                        {width>800?'Connection With Me':<i className={`talk outline link icon ${S.m0}`}></i>}
+                    </Link>
+                </nav>
                 <i className={`circular icon ${S.header}`}></i>
                 <p className={`${S.tac}`}>
                     <span className={nickname?S.mr1:''}>{nickname?nickname:''}</span>

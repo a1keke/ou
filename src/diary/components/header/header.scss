@@ -2,10 +2,22 @@
 
 .mt {
     margin-top: 1.5rem !important;
+    .nav {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 999;
+        a {
+            opacity: 1!important;
+        }
+    }
 }
 .header {
     background: url('./myPhoto.jpg') no-repeat center bottom;
     background-size: cover;
+    font-size: 2em !important;
+    margin: 0 auto !important;
+    display:block !important;
 }
 .tac {
     text-align: center;
@@ -16,4 +28,7 @@
 }
 .mr1 {
     margin-right: 1rem !important;
+}
+.m0 {
+    margin: 0 !important;
 }
