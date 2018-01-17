@@ -1,10 +1,6 @@
-
 import React,{Component} from 'react';
-
 import S from './style.scss';
-
 import {connect} from 'react-redux';
-
 import throttle from './../../../../util/throttled.js';
 import {fetchDiaryList} from '../../redux/action/index.js';
 class loadingMore extends Component{
@@ -16,7 +12,8 @@ class loadingMore extends Component{
     componentDidMount(){
 
         let {scrollEvent} = this;
-        if(this.props.nextPage!==-1){
+        //挂载这个组件时，如果已经之前已经加载完或者根本没有diary，则没有滚动
+        if(this.props.nextPage!==0 && this.props.nextPage!==-1){
             window.onscroll = throttle(scrollEvent,200);
         }
 
@@ -36,8 +33,12 @@ class loadingMore extends Component{
         window.onscroll = null;
     }
     isVisible(){
+        let scrollTop = window.pageYOffset
+            || document.documentElement.scrollTop
+            || document.body.scrollTop
+            || 0;
         //屏幕高度+卷去高度>全文高度-盒子高度 => 盒子在可视区内
-        return document.body.clientHeight+document.body.scrollTop >document.body.scrollHeight-this.refs.loading.offsetHeight-100
+        return document.body.clientHeight+scrollTop >document.body.scrollHeight-this.refs.loading.offsetHeight-100
     }
 
     render(){

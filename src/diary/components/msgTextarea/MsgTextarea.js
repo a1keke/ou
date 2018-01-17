@@ -1,21 +1,18 @@
 import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
 import {showToast} from '../../redux/action/index.js';
 import {connect} from 'react-redux';
 import S from './style.scss';
-import 'whatwg-fetch';
-import 'promise-polyfill';
-class diaryTextarea extends Component{
+class msgTextarea extends Component{
     constructor(props){
         super(props);
         this.state = {
-            title:'',
             content:'',
             images:[],
             imagesValue:''
         }
-        this.changeTitle = this.changeTitle.bind(this);
         this.changeContent = this.changeContent.bind(this);
-        this.saveDairy = this.saveDairy.bind(this);
+        this.saveMsg = this.saveMsg.bind(this);
         this.tabEvent = this.tabEvent.bind(this);
         this.fomartContent = this.fomartContent.bind(this);
         this.hasTab = this.hasTab.bind(this);
@@ -24,9 +21,6 @@ class diaryTextarea extends Component{
         this.deleteImage = this.deleteImage.bind(this);
         this.noCodeConetnt = this.noCodeConetnt.bind(this);
     };
-
-    changeTitle(ev){this.setState({title:ev.target.value})};
-
     changeContent(ev){this.setState({content:ev.target.value})};
     //图片上传
     changeImage(ev){
@@ -79,7 +73,7 @@ class diaryTextarea extends Component{
             let {images,content} = this.state;
 
             let index = 0;
-            
+
             images = images.filter((ele,i)=>{
                 if(ele.name === name){
                     index = i+1;
@@ -124,14 +118,14 @@ class diaryTextarea extends Component{
         }
     }
     //提交diary
-    saveDairy(){
+    saveMsg(){
 
         let {fomartContent} = this;
         let {_account,showToast} = this.props;
-        let {title,content} = this.state;
+        let {content} = this.state;
 
-        if(title==='' || content ===''){
-            showToast('标题或者内容均不能为空');
+        if(content ===''){
+            showToast('留言内容不能为空');
             return false;
         }
 
@@ -143,7 +137,7 @@ class diaryTextarea extends Component{
                 'Content-Type': 'application/json'
             },
             credentials: 'same-origin',
-            body:JSON.stringify({title,content,account:_account})
+            body:JSON.stringify({content,account:_account})
         }
 
         fetch('/diary/saveDiary',init).then(res=>{
@@ -246,12 +240,12 @@ class diaryTextarea extends Component{
 
     noTab(part){return part.substr(0,4)!=='    ';}
     /*
-    * 对非代码的内容进行处理
-    * images 图片的数组
-    * content 要进行判断的内容
-    * result 要插入的结果数组
-    *
-    * */
+     * 对非代码的内容进行处理
+     * images 图片的数组
+     * content 要进行判断的内容
+     * result 要插入的结果数组
+     *
+     * */
     noCodeConetnt(result,content){
         let index = 0 ;
         // 判断是否为图片内容
@@ -267,12 +261,39 @@ class diaryTextarea extends Component{
     }
 
     render(){
-        let {changeTitle,changeContent,saveDairy,tabEvent,changeImage,deleteImage} = this;
+        let {changeContent,saveDairy,tabEvent,changeImage,deleteImage} = this;
+        let {_account} = this.props;
+        let {content,imagesValue,images} = this.state;
+        let {showToast} = this.props;
+        //未登录不展示框，提示登录
+        let formDom = _account?(
+            <form className={`ui reply form ${S.mb1}`} encType="multipart/form-data" ref="imagesForm">
+                <div className="field">
+                    <textarea value={content} onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
+                </div>
+                <div className="ui blue labeled submit icon button"
+                     onClick={saveDairy}
+                >
+                    <i className="icon edit"></i>
+                    save
+                </div>
+                <div className={`${S.fileBox}`}>
+                    <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" value={imagesValue} accept="image/jpeg,image/png,image/bmp" />
+                    <i className='large image icon' title="up Images"></i>
+                </div>
+            </form>
+        ):(
+            <div className="ui info message">
+                <div className="header">你还未登录，请先
+                    <Link to='/diary/user/login'>登录</Link>
+                    or
+                    <Link to='/diary/user/signup'>注册</Link>
+                </div>
+            </div>
+        );
 
-        let {title,content,imagesValue,images} = this.state;
-        let {showToast,_nickname} = this.props;
         let imagesArr = images.length?(
-            <div className={`ui tiny images ${S.images}`}>
+            <div className={`ui tiny images`}>
                 {
                     images.map((ele,i)=>{
                         let {url,name,key} = ele;
@@ -292,33 +313,18 @@ class diaryTextarea extends Component{
         ):null;
 
         return (
-            <div>
-                <form className={`ui reply form ${S.mtm5}`} encType="multipart/form-data" ref="imagesForm">
-                    <div className={`ui labeled input ${S.mb}`}>
-                        <a className="ui label">title</a>
-                        <input value={title} type="text" placeholder="请输入标题"  onChange={changeTitle} />
-                        <input type="text" style={{display:'none'}}/>
-                    </div>
-                    <div className="field">
-                        <textarea value={content} onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
-                    </div>
-                    <div className="ui blue labeled submit icon button"
-                         onClick={saveDairy}
-                    >
-                        <i className="icon edit"></i>
-                        save
-                    </div>
-                    <div className={`${S.fileBox}`}>
-                        <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" value={imagesValue} accept="image/jpeg,image/png,image/bmp" />
-                        <i className='large image icon' title="up Images"></i>
-                    </div>
-                </form>
+            <div className="twelve wide column">
+                <h3 className="ui header dividing">
+                    <i className="write icon blue"></i>
+                    <div className="content">本站留言</div>
+                </h3>
+                {formDom}
                 {imagesArr}
             </div>
         );
     }
 }
-const DiaryTextarea = connect(state=>{
+const MsgTextarea = connect(state=>{
     return{
         _account:state.fetchReducer.account
     }
@@ -326,5 +332,5 @@ const DiaryTextarea = connect(state=>{
     return {
         showToast:(text,btnEvent)=>dispatch(showToast(text,btnEvent))
     }
-})(diaryTextarea);
-export default DiaryTextarea;
+})(msgTextarea);
+export default MsgTextarea;

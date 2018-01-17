@@ -82,7 +82,6 @@ exports.getChapter = function (req,cb) {
             })
     })
 }
-
 exports.getBookNameBybid = function (req,cb) {
     let bid = req.query.bid*1;
     _getBookNameBybid(bid).then(bookname=>{

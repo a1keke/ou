@@ -35,7 +35,7 @@ class header extends Component{
                     <Link to="#" className="ui blue floated right button">
                         {width>800?'About Me':<i className={`user link icon ${S.m0}`}></i>}
                     </Link>
-                    <Link to="#" className="ui blue floated right button">
+                    <Link to="/diary/connect" className="ui blue floated right button">
                         {width>800?'Connection With Me':<i className={`talk outline link icon ${S.m0}`}></i>}
                     </Link>
                 </nav>

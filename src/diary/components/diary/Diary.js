@@ -44,7 +44,7 @@ class diary extends Component{
         );
 
         let moreIcon = content.length > 8 && !isDetail?(
-            <Link to={`/diary/${title}`} className="ui attached label"><i className="large search icon"></i></Link>
+            <Link to={`/diary/detail/${title}`} className="ui attached label"><i className="large search icon"></i></Link>
         ):(null);
 
         return (
@@ -55,7 +55,7 @@ class diary extends Component{
                 </div>
                 <div className={`content ${S.w}`}>
                     <div className="summary">
-                        <Link to={`/diary/${title}`}>{title}</Link>
+                        <Link to={`/diary/detail/${title}`}>{title}</Link>
                         <div className="date">{time}{week}</div>
                         {
                             localStorage.getItem('account')===account&&!isDetail?
@@ -64,7 +64,6 @@ class diary extends Component{
                                     onClick={()=>{
                                         showToast('确定要删除这篇diary吗？',{account,index});
                                     }}
-
                                 >删除</a>:''
                         }
                     </div>

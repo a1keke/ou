@@ -1,0 +1,40 @@
+/*scss*/
+.mb  {
+    margin-bottom:1em;
+    width:85%;
+}
+.m2 {
+    margin: 0 2rem;
+}
+.mb1 {
+    margin-bottom:1em !important;
+}
+.fileBox {
+    display: inline;
+    position: relative;
+    margin-left: 1rem !important;
+    i {
+        cursor: pointer;
+    }
+    input {
+        width: 1.18em !important;
+        height: 100%;
+        position: absolute;
+        top: 50%;
+        right:0;
+        -ms-transform: translate(0, -50%);
+        -webkit-transform: translate(0, -50%);
+        -o-transform: translate(0, -50%);
+        -moz-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        opacity: 0;
+        cursor: pointer;
+
+    }
+}
+.images {
+    margin:0 5% !important;
+    img {
+        cursor: pointer;
+    }
+}
