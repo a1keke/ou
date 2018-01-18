@@ -13,7 +13,7 @@ class toast extends Component{
         return (
             <div
                 className={isHidden?'ui dimmer modals page transition':
-                    'ui dimmer modals page transition visible active'}
+                    `ui dimmer modals page transition visible active ${S.zindex}`}
                 onClick={hideToast}
                 >
                 <div className={`ui small test modal transition visible active ${S.fix}`}>
