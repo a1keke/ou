@@ -269,7 +269,6 @@ exports.saveBaseInfo = function (req,info,cb) {
         }
     )(req,cb)
 }
-
 //注册账号
 exports.saveSignUpInfo = function (req,info,cb) {
     let {ip,nickname,account,password,email,appVersion,platform} = info;
@@ -349,7 +348,7 @@ exports.saveSignUpInfo = function (req,info,cb) {
         }
     )()
 }
-
+//登录
 exports.login = (req,info,cb)=> {
     (
         async()=>{
@@ -369,6 +368,46 @@ exports.login = (req,info,cb)=> {
             req.session.account = account;
             cb({code:1,account,nickname:accountRes[0].nickname})
             await db.close();
+        }
+    )()
+}
+//存留言
+exports.saveMsg = (args,cb)=>{
+    (
+        async ()=>{
+            let {content,account} = args;
+            let {time,week} = _getNowFormatDate();
+            let index = await _getMsgLength();
+            let db = await mongodbClient.connect(DIARY_URL);
+            let msgDB = await db.collection('msg');
+            try{
+                await msgDB.insert({index:index+1,account,time,week,content});
+                await db.close();
+                await cb({code:1});
+            }catch (e){
+                await cb({code:0,err:'保存失败'})
+            }
+        }
+    )()
+}
+//获取留言
+exports.getAllMsg = (nextPage,cb)=>{
+    (
+        async()=>{
+            let db = await mongodbClient.connect(DIARY_URL);
+            let msgDB = await db.collection('msg');
+            let msgArr = await msgDB.find().sort({'index':-1}).toArray();
+            let _nextPage = msgArr.length>nextPage*PAGE_SIZE?nextPage+1:0;
+            let msgRes = [];
+            for(let i = 0 ; i < msgArr.length; i++){
+                if(i>(nextPage-1)*PAGE_SIZE-1&&i<=nextPage*PAGE_SIZE-1){
+                    let {index,time,week,content,account} = msgArr[i];
+                    let nickname = await _getNicknameByAccount(account);
+                    msgRes.push({index,time,week,nickname,content});
+                }
+            }
+            await db.close();
+            await cb({code:1,msgList:msgRes,page:nextPage,nextPage:_nextPage});
         }
     )()
 }
@@ -418,6 +457,23 @@ function _getDiaryLength() {
             let diary = await db.collection('diary');
 
             let stats = await diary.stats();
+
+            await db.close();
+
+            return stats.count;
+
+        }
+    )()
+}
+function _getMsgLength() {
+    return (
+        async ()=>{
+
+            let db = await mongodbClient.connect(DIARY_URL);
+
+            let msg = await db.collection('msg');
+
+            let stats = await msg.stats();
 
             await db.close();
 

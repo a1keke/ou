@@ -3,7 +3,7 @@ import S from './style.scss';
 import {connect} from 'react-redux';
 import throttle from './../../../../util/throttled.js';
 import {fetchDiaryList} from '../../redux/action/index.js';
-class loadingMore extends Component{
+class scrollLoading extends Component{
     constructor(props){
         super(props);
         this.scrollEvent = this.scrollEvent.bind(this);
@@ -59,7 +59,7 @@ class loadingMore extends Component{
     }
 }
 
-const LoadingMore = connect(state=>{
+const ScrollLoading = connect(state=>{
     return{
         nextPage:state.fetchReducer.nextPage,
         diaryList:state.fetchReducer.diaryList
@@ -68,6 +68,6 @@ const LoadingMore = connect(state=>{
     return {
         fetchDiaryList:(nextPage,diaryList,cb)=>dispatch(fetchDiaryList(nextPage,diaryList,cb))
     }
-})(loadingMore);
+})(scrollLoading);
 
-export default LoadingMore;
+export default ScrollLoading;

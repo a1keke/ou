@@ -7,103 +7,13 @@ class msgTextarea extends Component{
     constructor(props){
         super(props);
         this.state = {
-            content:'',
-            images:[],
-            imagesValue:''
+            content:''
         }
         this.changeContent = this.changeContent.bind(this);
         this.saveMsg = this.saveMsg.bind(this);
         this.tabEvent = this.tabEvent.bind(this);
-        this.fomartContent = this.fomartContent.bind(this);
-        this.hasTab = this.hasTab.bind(this);
-        this.noTab = this.noTab.bind(this);
-        this.changeImage = this.changeImage.bind(this);
-        this.deleteImage = this.deleteImage.bind(this);
-        this.noCodeConetnt = this.noCodeConetnt.bind(this);
     };
     changeContent(ev){this.setState({content:ev.target.value})};
-    //图片上传
-    changeImage(ev){
-        let {showToast} = this.props;
-        let {imagesForm} = this.refs;
-        let {images,content} = this.state;
-
-        let form = new FormData(imagesForm);
-
-        fetch('/diary/upImages',{
-            method:'POST',
-            body:form
-        }).then(res=>{
-            return res.json();
-        }).then(res=>{
-            if(!res.code){
-                showToast('上传失败，请不要上传非法的类型');
-                return false;
-            }
-            let num = images.length;
-            res.images.map((ele,i)=>{
-                ele.index = num;
-                if(content.lastIndexOf('\n')!==content.length-1) content += '\n';
-                content += '图片'+(num+1)+'(此行不可修改！只能通过点击图片删除此行)\n';
-                num++;
-            })
-            images = images.concat(res.images);
-            this.setState({content,images})
-        })
-
-    };
-    // 删除图片
-    deleteImage(name,key,url){
-        fetch('/diary/deleteImage',{
-            method:'POST',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body:JSON.stringify({name,key,url})
-        }).then(res=>res.json()).then(res=>{
-            if(res.code===0){
-                let {showToast} = this.props;
-                console.log('deleteImage fail,result is' + res.err);
-                setTimeout(()=>{
-                    showToast('删除失败，请稍后再试');
-                },300);
-                return false;
-            }
-
-            let {images,content} = this.state;
-
-            let index = 0;
-
-            images = images.filter((ele,i)=>{
-                if(ele.name === name){
-                    index = i+1;
-                    return false;
-                }
-                return true;
-            })
-
-            content = content.split('\n').filter(ele=>{
-                if(ele.indexOf('此行不可修改！') != -1 || ele.indexOf('只能通过点击图片删除此行') != -1){
-                    let _index = ele.substring(ele.indexOf('片')+1,ele.indexOf('('));
-                    return _index != index;
-                }
-                return true;
-            }).map(ele=>{
-                if(ele.indexOf('此行不可修改！') != -1 || ele.indexOf('只能通过点击图片删除此行') != -1){
-                    let _index = ele.substring(ele.indexOf('片')+1,ele.indexOf('('));
-                    if(_index > index){
-                        ele = ele.replace(_index,_index-1);
-                    }
-                }
-                return ele;
-            }).join('\n');
-
-            this.setState({images,content});
-
-        }).catch(res=>{
-            console.log(res);
-        })
-    }
     //输入框支持tab键
     tabEvent(ev){
         if(ev.keyCode===9){
@@ -120,16 +30,16 @@ class msgTextarea extends Component{
     //提交diary
     saveMsg(){
 
-        let {fomartContent} = this;
         let {_account,showToast} = this.props;
         let {content} = this.state;
-
         if(content ===''){
             showToast('留言内容不能为空');
             return false;
         }
-
-        content = fomartContent(content);
+        if(content.length>200){
+            showToast(`留言内容不能大于200字符,当前为${content.length}字符`);
+            return false;
+        }
 
         let init = {
             method:'POST',
@@ -140,7 +50,7 @@ class msgTextarea extends Component{
             body:JSON.stringify({content,account:_account})
         }
 
-        fetch('/diary/saveDiary',init).then(res=>{
+        fetch('/diary/saveMsg',init).then(res=>{
             return res.json();
         }).then(res=>{
             let {code} = res;
@@ -151,117 +61,9 @@ class msgTextarea extends Component{
         })
 
     }
-//对content进行处理
-    fomartContent(content){
-        let {hasTab,noTab,noCodeConetnt} = this;
-
-        let _content = content.split('\n');
-
-        let reg = new RegExp(' ','g');
-
-        _content = _content.filter((ele)=>{
-            return ele.replace(reg,'').length !== 0 ;
-        })
-
-        let result = [];
-
-        switch (_content.length){
-            case 1:
-                if(hasTab(_content[0])) {
-                    result.push({attr: 2, part:_content[0].substring(4,_content[0].length)});
-                }else {
-                    noCodeConetnt(result,_content[0]);
-                }
-                break;
-            case 2:
-                if(hasTab(_content[0]) && hasTab(_content[1])){
-                    result.push({attr: 3, part:_content[0].substring(4,_content[0].length)});
-                    result.push({attr: 4, part:_content[1].substring(4,_content[1].length)});
-                }else if(noTab(_content[0]) && noTab(_content[1])){
-                    noCodeConetnt(result,_content[0]);
-                    noCodeConetnt(result,_content[1]);
-                }else if(hasTab(_content[0]) && noTab(_content[1])){
-                    result.push({attr: 2, part:_content[0].substring(4,_content[0].length)});
-                    noCodeConetnt(result,_content[1]);
-                }else if(noTab(_content[0]) && noTab(_content[1])){
-                    noCodeConetnt(result,_content[0]);
-                    result.push({attr: 2, part:_content[1].substring(4,_content[1].length)});
-                }
-                break;
-            default:
-                for(let i = 0 ; i < _content.length ; i++){
-                    //第一个特殊处理
-                    if(i===0){
-                        let now = _content[i],next=_content[i+1];
-                        if(hasTab(now) && hasTab(next)){
-                            result.push({attr:3,part:now.substring(4,now.length)})
-                        }else if(hasTab(now) && noTab(next)){
-                            result.push({attr:2,part:now.substring(4,now.length)})
-                        }else if(noTab(now)){
-                            noCodeConetnt(result,now);
-                        }
-                        continue;
-                    }
-                    //最后一个特殊处理
-                    if(i===_content.length-1){
-                        let now = _content[i],prev=_content[i-1];
-                        if(hasTab(now) && hasTab(prev)){
-                            result.push({attr:4,part:now.substring(4,now.length)})
-                        }else if(hasTab(now) && noTab(prev)){
-                            result.push({attr:2,part:now.substring(4,now.length)})
-                        }else if(noTab(now)){
-                            noCodeConetnt(result,now);
-                        }
-                        continue;
-                    }
-                    //中间的
-                    let prev=_content[i-1],now = _content[i],next=_content[i+1];
-                    if(noTab(now)){
-                        noCodeConetnt(result,now);
-                    }else if(hasTab(prev) && hasTab(now) && hasTab(next)){
-                        result.push({attr:5,part:now.substring(4,now.length)})
-                    }else if(hasTab(prev) && hasTab(now) && noTab(next)){
-                        result.push({attr:4,part:now.substring(4,now.length)})
-                    }else if(noTab(prev) && hasTab(now) && hasTab(next)){
-                        result.push({attr:3,part:now.substring(4,now.length)})
-                    }else if(noTab(prev) && hasTab(now) && noTab(next)){
-                        result.push({attr:2,part:now.substring(4,now.length)})
-                    }
-
-                }
-                break;
-        }
-
-        return result;
-
-    }
-
-    hasTab(part){return part.substr(0,4)==='    ';}
-
-    noTab(part){return part.substr(0,4)!=='    ';}
-    /*
-     * 对非代码的内容进行处理
-     * images 图片的数组
-     * content 要进行判断的内容
-     * result 要插入的结果数组
-     *
-     * */
-    noCodeConetnt(result,content){
-        let index = 0 ;
-        // 判断是否为图片内容
-        if(content.indexOf('此行不可修改！') != -1 || content.indexOf('只能通过点击图片删除此行') != -1){
-            let {images} = this.state;
-            index = content.substring(content.indexOf('片')+1,content.indexOf('('))-1;
-            result.push({attr:6,part:images[index].url})
-        }else {
-            result.push({attr:1,part:content})
-        }
-
-
-    }
 
     render(){
-        let {changeContent,saveDairy,tabEvent,changeImage,deleteImage} = this;
+        let {changeContent,saveMsg,tabEvent,changeImage,deleteImage} = this;
         let {_account} = this.props;
         let {content,imagesValue,images} = this.state;
         let {showToast} = this.props;
@@ -272,14 +74,10 @@ class msgTextarea extends Component{
                     <textarea value={content} onChange={changeContent} onKeyDown={tabEvent} ref="content"></textarea>
                 </div>
                 <div className="ui blue labeled submit icon button"
-                     onClick={saveDairy}
+                     onClick={saveMsg}
                 >
                     <i className="icon edit"></i>
                     save
-                </div>
-                <div className={`${S.fileBox}`}>
-                    <input type="file" onChange={changeImage} multiple='true' title="up Images" name="images" value={imagesValue} accept="image/jpeg,image/png,image/bmp" />
-                    <i className='large image icon' title="up Images"></i>
                 </div>
             </form>
         ):(
@@ -292,34 +90,13 @@ class msgTextarea extends Component{
             </div>
         );
 
-        let imagesArr = images.length?(
-            <div className={`ui tiny images`}>
-                {
-                    images.map((ele,i)=>{
-                        let {url,name,key} = ele;
-                        return (
-                            <img className="ui image"
-                                 src={url}
-                                 key={i}
-                                 title={`图片${i+1},点击删除`}
-                                 onClick={()=>showToast('是否确定要删除这张图片？',()=>{
-                                     deleteImage(name,key,url)
-                                 })}
-                            />
-                        )
-                    })
-                }
-            </div>
-        ):null;
-
         return (
-            <div className="twelve wide column">
+            <div>
                 <h3 className="ui header dividing">
                     <i className="write icon blue"></i>
                     <div className="content">本站留言</div>
                 </h3>
                 {formDom}
-                {imagesArr}
             </div>
         );
     }

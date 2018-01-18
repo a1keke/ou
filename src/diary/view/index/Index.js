@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import DiaryTextarea from '../../components/diaryTextarea/DiaryTextarea.js';
 import DiaryList from '../../components/diaryList/DiaryList.js';
-import LoadingMore from '../../components/loadingMore/LoadingMore.js';
+import ScrollLoading from '../../components/scrollLoading/ScrollLoading.js';
 import {connect} from 'react-redux';
 import {fetchDiaryList} from '../../redux/action/index.js';
 
@@ -26,9 +26,9 @@ class index extends Component{
               {account?<DiaryTextarea/>:null}
               {nextPage===-1?
                   <DiaryList {...{diaryList}}/>
-                  :<LoadingMore>
+                  :<ScrollLoading>
                       <DiaryList {...{diaryList}}/>
-                  </LoadingMore>
+                  </ScrollLoading>
               }
           </div>
         );

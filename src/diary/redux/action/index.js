@@ -28,7 +28,7 @@ const DELETE_ONE_DIARY = res =>{
 //发送基本信息的action
 export const fetchBaseInfo = postData=>{
     return dispatch =>{
-        return fetch('/diary/base',{
+         fetch('/diary/base',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export const fetchBaseInfo = postData=>{
 // 获取单篇详细diary的action
 export const fetchDetailDiary = diaryTitle=>{
     return dispatch =>{
-        return fetch('/diary/getDiary',{
+         fetch('/diary/getDiary',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ export const fetchDetailDiary = diaryTitle=>{
 // 获取diary列表的action
 export const fetchDiaryList = (nextPage,diaryList,cb)=>{
     return dispatch =>{
-        return fetch('/diary/getAllDiary',{
+         fetch('/diary/getAllDiary',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export const fetchDiaryList = (nextPage,diaryList,cb)=>{
 // 注册的action
 export const fetchSignUp = info=>{
     return dispatch =>{
-        return fetch('/diary/signUp',{
+         fetch('/diary/signUp',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export const fetchSignUp = info=>{
 // 登录的action
 export const fetchLogin = (info)=>{
     return dispatch=>{
-        return fetch('/diary/login',{
+         fetch('/diary/login',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export const fetchLogin = (info)=>{
 //退出登录的action
 export const fetchLogout = ()=>{
     return dispatch=>{
-        return fetch('/diary/logout',{
+         fetch('/diary/logout',{
             method:'POST',
             credentials: 'same-origin',
         }).then(res=>res.json()).then(res=>{
@@ -174,7 +174,7 @@ export const fetchLogout = ()=>{
 //删除日记的action
 export const fetchDeleteDiary = info=>{
     return dispatch=>{
-        return fetch('/diary/deleteDiary',{
+         fetch('/diary/deleteDiary',{
             method:'POST',
             headers:{
                 'Content-Type': 'application/json',
@@ -189,6 +189,38 @@ export const fetchDeleteDiary = info=>{
     }
 }
 
+const FETCH_MSGLIST_SUCCESS = res=>{
+    return {
+        type:'FETCH_MSGLIST_SUCCESS',
+        res
+    }
+}
+const FETCH_MSGLIST_FAIL = res=>{
+    return {
+        type:'FETCH_MSGLIST_FAIL',
+        res
+    }
+}
+//获取留言的action
+export const fetchMsgList = (nextPage,msgList,cb)=>{
+    return dispatch =>{
+         if(cb){cb();}
+         fetch('/diary/getAllMsg',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body:JSON.stringify({nextPage})
+        })
+            .then(res => res.json())
+            .then(res => {
+                if(cb){cb();}
+                dispatch(FETCH_MSGLIST_SUCCESS({msgList:msgList.concat(res.msgList),page:res.page,nextPage:res.nextPage}))
+            })
+            .catch(e => dispatch(FETCH_MSGLIST_FAIL(e)))
+    }
+}
 // 更改弹框状态的action
 export const showToast = (text,btnEvent)=>{
     return {

@@ -32,9 +32,6 @@ class header extends Component{
         return (
             <h2 className={`ui center aligned header ${S.mt}`}>
                 <nav className={`${S.nav}`}>
-                    <Link to="#" className="ui blue floated right button">
-                        {width>800?'About Me':<i className={`user link icon ${S.m0}`}></i>}
-                    </Link>
                     <Link to="/diary/connect" className="ui blue floated right button">
                         {width>800?'Connection With Me':<i className={`talk outline link icon ${S.m0}`}></i>}
                     </Link>

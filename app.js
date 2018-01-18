@@ -43,6 +43,8 @@ app.post('/diary/signUp',router.signUp);
 app.post('/diary/login',router.login);
 app.post('/diary/logout',router.logout);
 app.post('/diary/deleteDiary',router.deleteDiary);
+app.post('/diary/saveMsg',router.saveMsg);
+app.post('/diary/getAllMsg',router.getAllMsg);
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);

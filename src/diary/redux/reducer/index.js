@@ -33,6 +33,21 @@ export const fetchReducer = (state=fetchState,action)=>{
             return state
     }
 }
+const msgState = {
+    page : 0,
+    nextPage : 1,
+    msgList:[]
+}
+export const msgReducer = (state=msgState,action)=>{
+    switch (action.type){
+        case 'FETCH_MSGLIST_SUCCESS':
+            return objectAssign({},state,action.res);
+        case 'FETCH_MSGLIST_FAIL':
+            return objectAssign({},state,action.res);
+        default:
+            return state
+    }
+}
 // 要被共享的组件的状态
 const toastState = {
     text:'',//弹框的文字

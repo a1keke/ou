@@ -178,3 +178,34 @@ exports.logout = function (req,res) {
         })
     })
 }
+exports.saveMsg = (req,res)=>{
+
+    let {
+        account:sessionAccount,
+        nickname:sessionNickname
+    } = req.session;
+    if(!sessionAccount || !sessionNickname){
+        res.json({code:0,err:'未登录，请先登录'});
+        return false;
+    }
+    let {account,content} = req.body;
+
+    if(sessionAccount!==account){
+        res.json({code:0,err:'异常的状态'});
+        return false;
+    }
+    if(content.length==0){
+        res.json({code:0,err:'留言内容不能为空'});
+        return false;
+    }
+    mongodb.saveMsg({account,content},result=>{
+        res.json(result)
+    })
+}
+exports.getAllMsg = (req,res)=>{
+    let {nextPage} = req.body;
+    mongodb.getAllMsg(nextPage,result=>{
+        res.json(result);
+    })
+
+}
