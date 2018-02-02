@@ -65,5 +65,7 @@ app.use('/biquge/:bookid',(req,res)=>{
 app.use('/biquge', function(req, res) {
     res.render('biquge/index', '');
 });
-
+app.use('/', function(req, res) {
+    res.render('root', '');
+});
 app.listen(80);

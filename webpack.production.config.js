@@ -7,7 +7,8 @@ module.exports = {
         biquge:path.resolve(__dirname,'src/biquge/app.js'),
         bookDetail:path.resolve(__dirname,'src/biquge/bookDetail.js'),
         readPage:path.resolve(__dirname,'src/biquge/readPage.js'),
-        diary:path.resolve(__dirname,'src/diary/app-diary.js')
+        diary:path.resolve(__dirname,'src/diary/app-diary.js'),
+        root:path.resolve(__dirname,'src/root/app-root.js')
     },
     output: {
         path: path.resolve(__dirname,'static'),
@@ -81,7 +82,8 @@ module.exports = {
             compress: {
                 warnings: false
             }
-        })
+        }),
+        new webpack.optimize.CommonsChunkPlugin('common'), // 默认会把所有入口节点的公共代码提取出来,生成一个common.js
 
     ],
     resolve: {
