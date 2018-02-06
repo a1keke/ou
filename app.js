@@ -55,6 +55,10 @@ app.get('/biquge/interface/getBookName',router.getBookNameBybid);
 app.use('/diary',(req,res)=>{
     res.render('diary/index','')
 })
+//页面--日记
+app.use('/kele',(req,res)=>{
+    res.render('diary/index','')
+})
 // 页面--笔趣阁
 app.use('/biquge/:bookid/:chapter',(req,res)=>{
     res.render('biquge/readPage','')
