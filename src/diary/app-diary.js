@@ -1,8 +1,6 @@
 
 import ReactDOM from 'react-dom';
 
-import {BrowserRouter,Route} from 'react-router-dom';
-
 import {createStore,applyMiddleware,combineReducers} from 'redux';
 
 import {Provider} from 'react-redux';

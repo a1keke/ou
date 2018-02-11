@@ -411,6 +411,16 @@ exports.getAllMsg = (nextPage,cb)=>{
         }
     )()
 }
+//获取问题列表
+exports.getQuestionList = cb=>{
+    (
+        async()=>{
+            let db = await mongodbClient.connect(DIARY_URL);
+            let msgDB = await db.collection('msg');
+            let msgArr = await msgDB.find().sort({'index':-1}).toArray();
+        }
+    )()
+}
 //根据传入的bookid查找书名
 function _getBookNameBybid(bid) {
     return new Promise((res,rej)=>{

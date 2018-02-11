@@ -8,7 +8,8 @@ module.exports = {
         bookDetail:path.resolve(__dirname,'src/biquge/bookDetail.js'),
         readPage:path.resolve(__dirname,'src/biquge/readPage.js'),
         diary:path.resolve(__dirname,'src/diary/app-diary.js'),
-        root:path.resolve(__dirname,'src/root/app-root.js')
+        root:path.resolve(__dirname,'src/root/app-root.js'),
+        kele:path.resolve(__dirname,'src/kele/app.js')
     },
     output: {
         path: path.resolve(__dirname,'static'),
@@ -17,6 +18,10 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.json$/,
+                use: 'json-loader'
+            },
             {
                 test: /\.(png|jpg|jpeg|gif)$/,
                 use: ['url-loader?limit=8192&name=/resource/[hash].[ext]'],

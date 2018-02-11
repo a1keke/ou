@@ -45,6 +45,7 @@ app.post('/diary/logout',router.logout);
 app.post('/diary/deleteDiary',router.deleteDiary);
 app.post('/diary/saveMsg',router.saveMsg);
 app.post('/diary/getAllMsg',router.getAllMsg);
+app.post('/kele/getQuestionList',router.getQuestionList);
 app.get('/biquge/interface/getAllBooks',router.getAllBooks);
 app.get('/biquge/interface/getChaptersByBid',router.getChaptersByBid);
 // app.get('/biquge/interface/getChaptersByName',router.getChaptersByName);
@@ -55,9 +56,9 @@ app.get('/biquge/interface/getBookName',router.getBookNameBybid);
 app.use('/diary',(req,res)=>{
     res.render('diary/index','')
 })
-//页面--日记
+//页面--可乐
 app.use('/kele',(req,res)=>{
-    res.render('diary/index','')
+    res.render('kele/index','')
 })
 // 页面--笔趣阁
 app.use('/biquge/:bookid/:chapter',(req,res)=>{

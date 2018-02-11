@@ -209,3 +209,8 @@ exports.getAllMsg = (req,res)=>{
     })
 
 }
+exports.getQuestionList = (req,res)=>{
+    mongodb.getQuestionList(result=>{
+        res.json(result);
+    })
+}
