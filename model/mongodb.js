@@ -12,6 +12,8 @@ const DIARY_URL = 'mongodb://localhost:27017/diary';
 
 const BASEINFO_URL = 'mongodb://localhost:27017/baseInfo';
 
+const KELE_URL = 'mongodb://localhost:27017/kele';
+
 const PAGE_SIZE = 5;
 
 
@@ -415,9 +417,16 @@ exports.getAllMsg = (nextPage,cb)=>{
 exports.getQuestionList = cb=>{
     (
         async()=>{
-            let db = await mongodbClient.connect(DIARY_URL);
-            let msgDB = await db.collection('msg');
-            let msgArr = await msgDB.find().sort({'index':-1}).toArray();
+            let db = await mongodbClient.connect(KELE_URL);
+            let questionDB = await db.collection('question');
+            let questionArr = await questionDB.find().toArray();
+            await db.close();
+            await cb({
+                code:1,
+                questionList:questionArr.map((ele,i)=>{
+                    return {ques:ele.ques,answ:ele.answ}
+                })
+            })
         }
     )()
 }
