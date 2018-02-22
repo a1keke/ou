@@ -430,6 +430,22 @@ exports.getQuestionList = cb=>{
         }
     )()
 }
+exports.addQuestion = (info,cb)=>{
+    (
+        async()=>{
+            let db = await mongodbClient.connect(KELE_URL);
+            let questionDB = await db.collection('question');
+            try {
+                await questionDB.insert(info);
+                await db.close();
+                await cb({code:1})
+            }catch(e) {
+                await cb({code:0,err:e})
+            }
+
+        }
+    )()
+}
 //根据传入的bookid查找书名
 function _getBookNameBybid(bid) {
     return new Promise((res,rej)=>{

@@ -214,3 +214,31 @@ exports.getQuestionList = (req,res)=>{
         res.json(result);
     })
 }
+
+exports.addQuestion = (req,res)=>{
+    let {ques,answ} = req.body;
+    if(!ques || !answ){
+        res.json({code:0,err:'内容不能为空'});
+        return false;
+    }
+    //暂时不做登录判断
+    // let {
+    //     account:sessionAccount,
+    //     nickname:sessionNickname
+    // } = req.session;
+    // if(!sessionAccount || !sessionNickname){
+    //     res.json({code:0,err:'未登录，请先登录'});
+    //     return false;
+    // }
+    // if(sessionAccount!==account){
+    //     res.json({code:0,err:'异常的登录状态'});
+    //     return false;
+    // }
+    // if(sessionAccount!==''){
+    //     res.json({code:0,err:'没有权限添加问题'});
+    //     return false;
+    // }
+    mongodb.addQuestion({ques,answ},result=>{
+        res.json(result);
+    });
+}

@@ -19,8 +19,16 @@ export default class AddQuestion extends Component{
     }
     fetchAddQuestion(){
         let {question,answer} = this.state;
-        console.log(question);
-        console.log(answer);
+        fetch('/kele/addQuestion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body:JSON.stringify({ques:question,answ:answer})
+        }).then(res=>res.json()).then(res=>{
+            console.log(res);
+        })
     }
     render(){
         let {questionChange,answerChange,fetchAddQuestion} = this;
