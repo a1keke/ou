@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import S from './style.scss';
 export default class QuestionList extends Component{
     constructor(props){
         super(props);
@@ -6,7 +7,7 @@ export default class QuestionList extends Component{
     render(){
         let {questionList} = this.props;
         return (
-            <ul className="ui list">
+            <ul className={`${S.pad} ui list`}>
                 {
                     questionList.map((ele,i)=>{
                         return (

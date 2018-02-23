@@ -23,4 +23,7 @@ validator.addByValue('password',[
 validator.addByValue('email',[
     {strategy: 'isMail', errorMsg: '请输入正确的email'}
 ]);
+validator.addByValue('search',[
+    {strategy: 'onlyNumAndStr', errorMsg: '请输入关键字首字母或者数字，如要搜索桑尼，请输入sn'}
+]);
 exports.validator = validator;

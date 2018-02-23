@@ -21,6 +21,7 @@
     "express-react-views": "^0.10.4",
     "express-session": "^1.15.6",
     "object-assign": "^4.1.1",
+    "pinyin": "^2.8.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",

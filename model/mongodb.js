@@ -3,7 +3,8 @@
 let mongodb = require('mongodb');
 let querystring = require('querystring');
 let http = require('http');
-let file = require('./file.js')
+let file = require('./file.js');
+let pinyin = require('pinyin');
 let mongodbClient = mongodb.MongoClient;
 
 const BQG_URL = 'mongodb://localhost:27017/biquge';
@@ -424,7 +425,7 @@ exports.getQuestionList = cb=>{
             await cb({
                 code:1,
                 questionList:questionArr.map((ele,i)=>{
-                    return {ques:ele.ques,answ:ele.answ}
+                    return {ques:ele.ques,answ:ele.answ,py:ele.py}
                 })
             })
         }
@@ -435,8 +436,11 @@ exports.addQuestion = (info,cb)=>{
         async()=>{
             let db = await mongodbClient.connect(KELE_URL);
             let questionDB = await db.collection('question');
+            let py = await pinyin(info.ques,{
+                style:pinyin.STYLE_FIRST_LETTER
+            }).join('');
             try {
-                await questionDB.insert(info);
+                await questionDB.insert({...info,py});
                 await db.close();
                 await cb({code:1})
             }catch(e) {
