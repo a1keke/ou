@@ -1,3 +1,4 @@
 /static/*
 !/static/resource
+!/static/json
 /.idea/workspace.xml
