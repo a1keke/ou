@@ -33,7 +33,7 @@ export default class ChapterList extends Component{
 
             return (
                 <div className="item" key={i}>
-                    <a className={`content ${S.disBlock}`} href={`./${bid}/${ele.index}`}>
+                    <a className={`content ${S.disBlock}`} href={`/biquge/${bid}/${ele.index}`}>
                         <div className="header">{ele.name}</div>
                     </a>
                 </div>
