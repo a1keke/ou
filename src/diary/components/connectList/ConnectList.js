@@ -43,7 +43,7 @@ export default class ConnectList extends Component{
                     <img className={`ui avatar image ${S.img}`} src="/static/resource/segmentfault.png" />
                     <div className="middle aligned content">
                         <div className="header">segmentfault</div>
-                        <div className="description"><a href="https://segmentfault.com/u/ou_5927ed57c1b96">-欧粑粑</a></div>
+                        <div className="description"><a href="https://segmentfault.com/u/ou_5927ed57c1b96">欧兜兜是素姀</a></div>
                     </div>
                 </div>
                 <div className="item">
