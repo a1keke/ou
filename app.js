@@ -13,19 +13,19 @@ var app = express();
 app.set('view engine', 'html');
 app.set('views', path.resolve(__dirname,'views'));
 app.engine('html', ejs.renderFile);
-app.use('/diary',session({
-    name:'ouyuqin',
-    secret:'ouyuqin',
-    resave: false,
-    saveUninitialized: true,
-    store:new MongoStore({
-        url:'mongodb://localhost:27017/diary',
-
-    }),
-    cookie:{
-        maxAge:1000*60*60*24*30
-    }
-}))
+// app.use('/diary',session({
+//     name:'ouyuqin',
+//     secret:'ouyuqin',
+//     resave: false,
+//     saveUninitialized: true,
+//     store:new MongoStore({
+//         url:'mongodb://localhost:27017/diary',
+//
+//     }),
+//     cookie:{
+//         maxAge:1000*60*60*24*30
+//     }
+// }))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit:'200kb' }));
 app.use('/static',express.static('./static'))
@@ -70,6 +70,10 @@ app.use('/biquge/:bookid',(req,res)=>{
 })
 app.use('/biquge', function(req, res) {
     res.render('biquge/index', '');
+});
+//download
+app.use('/download/setting', function(req, res) {
+    res.download('download/settings.jar');
 });
 app.use('/', function(req, res) {
     res.render('root', '');
