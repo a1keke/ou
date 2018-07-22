@@ -1,0 +1,44 @@
+/*scss*/
+
+.flex {
+    display: -webkit-box !important;
+    display: -moz-box !important;
+    display: -ms-flexbox !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+    margin-bottom: 1rem  !important;
+}
+.m0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.radio {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    cursor: pointer;
+    margin-right: 1rem;
+    position: relative;
+    top: -2px;
+}
+.radio-checked {
+    border: 1px solid #1890ff;
+}
+.radio-checked:after {
+    content: '';
+    display: block;
+    width: 0.8rem;
+    height: 0.8rem;
+    background-color: #1890ff;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+}

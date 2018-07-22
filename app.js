@@ -57,6 +57,11 @@ app.get('/biquge/interface/getBookName',router.getBookNameBybid);
 app.use('/diary',(req,res)=>{
     res.render('diary/index','')
 })
+//页面--潘斌
+app.use('/panbin',(req,res)=>{
+    res.render('panbin/index','');
+})
+
 //页面--可乐
 app.use('/kele',(req,res)=>{
     res.render('kele/index','')

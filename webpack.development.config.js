@@ -5,7 +5,8 @@
             // jianshu:path.resolve(__dirname,'src/jianshu/app.js'),
             // biquge:path.resolve(__dirname,'src/biquge/app.js'),
             // bookDetail:path.resolve(__dirname,'src/biquge/bookDetail.js'),
-            // readPage:path.resolve(__dirname,'src/biquge/readPage.js')
+            // readPage:path.resolve(__dirname,'src/biquge/readPage.js'),
+            panbin:path.resolve(__dirname,'src/panbin/app.js'),
             diary:path.resolve(__dirname,'src/diary/app-diary.js'),
             root:path.resolve(__dirname,'src/root/app-root.js'),
             kele:path.resolve(__dirname,'src/kele/app.js')
