@@ -121,10 +121,10 @@ class Index extends React.Component {
                 <p>圈柱 = 10/机上纵密</p>
                 <p>延展线 = 针距数 * 针距</p>
                 <p>注意：当重经组织沉降弧等于一个针距时，线圈长度 = 2*圈弧 + 4*圈柱 + 延展线</p>
-                <h2 className='ui dividing header'>
-                    潘斌
-                </h2>
-                <img className='ui fluid image' src="/static/resource/panbinBG.jpeg" />
+                {/*<h2 className='ui dividing header'>*/}
+                    {/*潘斌*/}
+                {/*</h2>*/}
+                {/*<img className='ui fluid image' src="/static/resource/panbinBG.jpeg" />*/}
             </div>
 
         );
