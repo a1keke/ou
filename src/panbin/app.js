@@ -124,7 +124,7 @@ class Index extends React.Component {
                 <h2 className='ui dividing header'>
                     潘斌
                 </h2>
-                <img className='ui fluid image' src="/static/resource/panbinBG.jpg" />
+                <img className='ui fluid image' src="/static/resource/panbinBG.jpeg" />
             </div>
 
         );
